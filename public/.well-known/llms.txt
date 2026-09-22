@@ -1,0 +1,3 @@
+# India Macro Indicators & Economic Monitor
+# Link to root llms.txt: /llms.txt
+# Sitemap: /sitemap.xml

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 135" fill="none" width="100%" height="100%">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&amp;display=swap');
+      .brand-main {
+        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-weight: 800;
+        font-size: 68px;
+        letter-spacing: -1.5px;
+      }
+      .brand-macro {
+        fill: #113824;
+      }
+      .brand-online {
+        fill: #547838;
+        font-weight: 600;
+      }
+      .tagline-rule {
+        stroke: #4b3f36;
+        stroke-width: 1.75;
+        stroke-linecap: round;
+      }
+      .tagline-text {
+        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-weight: 600;
+        fill: #4b3f36;
+        text-anchor: middle;
+      }
+    </style>
+  </defs>
+
+  <!-- MacroNest.online Wordmark -->
+  <text x="10" y="66" class="brand-main">
+    <tspan class="brand-macro">MacroNest</tspan><tspan class="brand-online">.online</tspan>
+  </text>
+
+  <!-- Tagline Row 1: Left Rule + KNOWLEDGE TODAY + Right Rule -->
+  <line x1="16" y1="94" x2="132" y2="94" class="tagline-rule" />
+  <text x="278" y="99" class="tagline-text" font-size="14.5" letter-spacing="4.8">KNOWLEDGE TODAY</text>
+  <line x1="424" y1="94" x2="540" y2="94" class="tagline-rule" />
+
+  <!-- Tagline Row 2: A BRIGHTER TOMORROW -->
+  <text x="278" y="122" class="tagline-text" font-size="13.5" letter-spacing="6.8">A BRIGHTER TOMORROW</text>
+</svg>

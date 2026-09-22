@@ -1,0 +1,138 @@
+import { BlogPost } from '../types.ts';
+
+export const INITIAL_BLOG_POSTS: BlogPost[] = [
+  {
+    id: 'post-banking-liquidity',
+    title: "Decoding India's Banking System Liquidity: The RBI Stance & Overnight Call Rates",
+    slug: 'decoding-india-banking-system-liquidity-rbi-stance',
+    excerpt:
+      'An examination of net daily liquidity absorption under the Standing Deposit Facility (SDF), government cash balances, and what friction in overnight money markets signals for policy transmission.',
+    content: `### The Liquidity Transmission Nexus
+
+In India's financial architecture, the stance of monetary policy is directly transmitted to the real economy through overnight money markets. When the Reserve Bank of India (RBI) operates its liquidity management framework, the primary operating target is the **Weighted Average Call Rate (WACR)**, which is steered to anchor tightly around the benchmark Policy Repo Rate.
+
+### Operating Levers: SDF and MSF
+
+Under the Revised Liquidity Management Framework:
+- **Standing Deposit Facility (SDF)** sits 25 bps below the Repo Rate, serving as the collateral-free unremunerated floor for overnight bank surplus absorption.
+- **Marginal Standing Facility (MSF)** sits 25 bps above the Repo Rate, acting as the emergency ceiling where commercial banks can borrow against excess SLR holdings.
+- **Variable Rate Repo (VRR) & Reverse Repo (VRRR)** auctions are deployed to calibrate durable and frictional liquidity over 7-day to 14-day tenors.
+
+### The Role of Government Cash Balances
+
+A significant determinant of banking system liquidity fluctuations is the movement of central government balances parked with the RBI. During peak advance tax payment windows (mid-March, mid-June, mid-September, and mid-December) and GST settlement cycles around the 20th of every month, commercial bank deposits flow into the exchequer's account at the central bank, temporarily tightening systemic liquidity.
+
+Conversely, when the government accelerates capital expenditure (CapEx) disbursements, liquidity is injected back into commercial banking reserves, easing overnight rates back toward the Repo corridor midpoint.
+
+### Key Takeaways for Market Observers
+1. **WACR Spread**: Watch if the call rate trades closer to the MSF ceiling (indicating structural tightness) or the SDF floor (indicating ample surplus).
+2. **Credit-Deposit Wedge**: Persistent divergence between credit growth (12–14%) and deposit growth (10–12%) exerts natural upward pressure on short-term Certificate of Deposit (CD) issuance yields.
+3. **Foreign Exchange Inflows**: RBI's net dollar purchases inject primary rupee liquidity into the system, whereas aggressive currency defense drains rupee reserves unless offset by Open Market Operations (OMO).`,
+    category: 'Monetary Policy',
+    author: 'Macro Research Desk',
+    readTimeMinutes: 5,
+    coverImage: '',
+    tags: ['RBI', 'Monetary Policy', 'Liquidity', 'Repo Rate', 'SDF'],
+    isPublished: true,
+    publishedAt: '2026-09-18T10:00:00.000Z',
+    updatedAt: '2026-09-18T10:00:00.000Z',
+    seo: {
+      metaTitle: "Decoding India's Banking System Liquidity & RBI Stance",
+      metaDescription:
+        'Analysis of RBI liquidity absorption under the Standing Deposit Facility (SDF), government cash balances, and interbank transmission dynamics.',
+      keywords: ['RBI liquidity', 'Standing Deposit Facility', 'Call Money Rate', 'India monetary policy', 'WACR'],
+      canonicalUrl: 'https://macronest.online/blog/decoding-india-banking-system-liquidity-rbi-stance',
+      ogImage: '',
+      structuredDataType: 'Article',
+    },
+  },
+  {
+    id: 'post-forex-reserves',
+    title: "India's Foreign Exchange Reserves: Dynamics of RBI Intervention & Import Cover",
+    slug: 'india-forex-reserves-external-resilience-import-cover',
+    excerpt:
+      'How the Reserve Bank of India manages two-way rupee volatility through forward books and spot interventions while sustaining an adequate merchandise import cover.',
+    content: `### The Buffer Against External Shocks
+
+India's external sector resilience is fundamentally anchored by its foreign exchange reserves held by the Reserve Bank of India. Spanning Foreign Currency Assets (FCA), Gold Reserves, Special Drawing Rights (SDRs), and the Reserve Tranche Position (RTP) in the IMF, this cushion shields the domestic economy from sudden stops in capital flows and international commodity spikes.
+
+### The Anatomy of the Reserves
+
+- **Foreign Currency Assets (FCA)**: Comprise non-dollar sovereign securities, deposits with foreign central banks, and prime commercial paper denominated in USD, EUR, GBP, and JPY, adjusted for exchange valuation effects.
+- **Sovereign Gold**: Held physically at RBI vaults in Nagpur and Bank of England storage, representing an unencumbered sovereign balance sheet asset that has appreciated substantially.
+- **Forward Delivery Book**: In addition to headline spot reserves, the RBI operates an active long/short forward book in the offshore non-deliverable forward (NDF) and onshore OTC market.
+
+### Import Cover & External Debt Adequacy
+
+An essential metric evaluated by global sovereign rating agencies is **Months of Import Cover**. 
+
+$$\\text{Import Cover} = \\frac{\\text{Headline Forex Reserves}}{\\text{Average Monthly Merchandise Imports}}$$
+
+For emerging economies, a buffer exceeding 10 to 12 months is regarded as robust. Concurrently, the ratio of short-term external debt (residual maturity) to total reserves remains well within conservative thresholds, ensuring that debt service obligations remain immune to global rate cycles.
+
+### Strategic Implications
+- **Orderly Volatility**: The RBI reiterates that its interventions are strictly aimed at curbing excessive volatility rather than defending any arbitrary nominal exchange rate level.
+- **De-dollarization & Local Currency Settlement**: Emerging bilateral settlement arrangements in INR reduce structural dollar dependency over medium-term horizons.`,
+    category: 'External Sector',
+    author: 'External Sector Specialist',
+    readTimeMinutes: 6,
+    coverImage: '',
+    tags: ['Forex', 'RBI', 'External Sector', 'USDINR', 'Import Cover'],
+    isPublished: true,
+    publishedAt: '2026-09-12T09:30:00.000Z',
+    updatedAt: '2026-09-12T09:30:00.000Z',
+    seo: {
+      metaTitle: 'India Forex Reserves & External Resilience | Import Cover Analysis',
+      metaDescription:
+        'Examine RBI foreign currency assets, gold reserves, import cover duration, and forward market intervention strategies safeguarding the Indian Rupee.',
+      keywords: ['India forex reserves', 'RBI USDINR', 'Import cover', 'Foreign currency assets', 'External debt sustainability'],
+      canonicalUrl: 'https://macronest.online/blog/india-forex-reserves-external-resilience-import-cover',
+      ogImage: '',
+      structuredDataType: 'Article',
+    },
+  },
+  {
+    id: 'post-cpi-inflation',
+    title: 'Headline CPI vs Core Inflation: Deconstructing the Food Price Impulse in India',
+    slug: 'headline-cpi-vs-core-inflation-deconstructing-food-price-impulse',
+    excerpt:
+      "Unpacking the headline CPI basket: why volatile vegetable and pulse inflation challenges the 4% target while core inflation remains anchored.",
+    content: `### The Dual Character of Indian Inflation
+
+The Consumer Price Index (Combined) released monthly by the Ministry of Statistics and Programme Implementation (MoSPI) serves as the nominal anchor for India's Flexible Inflation Targeting (FIT) regime. With a target of 4.0% with a +/- 2.0% tolerance band, monetary policy is formally tasked with headline stability.
+
+However, the headline print in India often decouples from underlying economic demand due to the disproportionate weight of food items.
+
+### The Consumer Basket Structure
+
+1. **Consumer Food Price Index (CFPI)**: Accounts for approximately **45.86%** of the entire CPI basket. Perishable vegetables (tomatoes, onions, potatoes - the TOP complex), pulses, and edible oils exhibit high supply-side vulnerability to spatial monsoon distribution and unseasonal post-harvest rainfall.
+2. **Core CPI (Excluding Food & Fuel)**: Accounts for roughly **47.3%** of the basket. Spans transport, housing, health, education, recreation, personal care, and household goods. Core inflation is the genuine gauge of domestic demand pressures and corporate pricing power.
+
+### Why the Distinction Matters for Monetary Policy
+
+When headline inflation spikes exclusively due to weather-induced crop damage:
+- **Transitory Nature**: Supply-side food spikes typically normalize within one to two agricultural harvest cycles.
+- **Second-Round Effects**: The Monetary Policy Committee (MPC) remains vigilant against food price spikes feeding into household inflation expectations, wage demands, and service costs.
+- **Core Persistence**: A benign core inflation print (below 4%) signals that real interest rates are sufficiently restrictive, preventing broad-based inflationary contagion.
+
+### Summary
+While headline prints command media attention, central bankers and market strategists closely monitor core disinflation and 3-month annualized sequential momentum to anticipate shifts in the policy repo rate stance.`,
+    category: 'Inflation Watch',
+    author: 'Price Index Analyst',
+    readTimeMinutes: 5,
+    coverImage: '',
+    tags: ['Inflation', 'CPI', 'MoSPI', 'Core Inflation', 'Food Prices'],
+    isPublished: true,
+    publishedAt: '2026-09-05T08:00:00.000Z',
+    updatedAt: '2026-09-05T08:00:00.000Z',
+    seo: {
+      metaTitle: 'Headline vs Core CPI Inflation in India | Price Index Analysis',
+      metaDescription:
+        'A deep dive into India CPI inflation basket, separating supply-side food shocks from underlying core goods and services price momentum.',
+      keywords: ['India CPI inflation', 'Core inflation', 'Food inflation MoSPI', 'RBI 4 percent target', 'WPI CPI divergence'],
+      canonicalUrl: 'https://macronest.online/blog/headline-cpi-vs-core-inflation-deconstructing-food-price-impulse',
+      ogImage: '',
+      structuredDataType: 'Article',
+    },
+  },
+];

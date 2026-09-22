@@ -1,0 +1,45 @@
+# Robots.txt for India Macroeconomic Indicators & Research Dashboard
+User-agent: *
+Allow: /
+Allow: /blog
+Allow: /blog/*
+Allow: /calendar
+Allow: /sitemap.xml
+Allow: /llms.txt
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /api/admin
+Disallow: /api/admin/*
+
+# AI Search Crawlers & Retrieval Bots
+User-agent: Googlebot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Cohere-ai
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+Sitemap: https://macronest.online/sitemap.xml

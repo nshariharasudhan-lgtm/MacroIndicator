@@ -1,0 +1,30 @@
+# India Macro Indicators & Economic Monitor
+
+> Official and independent monitor for Indian macroeconomic indicators, banking system liquidity, monetary policy anchors, and macroeconomic research.
+
+## Core Capabilities
+- Real-time tracking of Reserve Bank of India (RBI) repo rate, SDF, and MSF corridor anchors.
+- Systemic banking liquidity deficit / surplus monitoring via CCIL and RBI WSS feeds.
+- Consumer Price Index (CPI) and Wholesale Price Index (WPI) headline vs core inflation prints.
+- Foreign Exchange (Forex) reserve health and import cover metrics.
+- Macroeconomic Release Calendar with official publishing frequencies and statutory release windows.
+- Full research analyses covering monetary policy, fiscal deficits, liquidity management, and sovereign debt.
+
+## Key Sections & Canonical URLs
+- **Homepage & Indicator Monitor**: `/`
+  Real-time tracking of all active macro indicators with category filters, frequency selectors, delta changes, and target anchors.
+- **Macroeconomic Release Calendar**: `/calendar`
+  Official schedules for RBI MPC decisions, CPI inflation releases, GDP quarterly prints, Index of Industrial Production (IIP), and Forex WSS announcements.
+- **Macroeconomic Research & Analysis**: `/blog`
+  Deep-dive economic research articles written by the macro research desk with quantitative models, historical context, and policy implications.
+
+## Selected Research Articles
+- `/blog/rbi-monetary-policy-repo-rate-decision`: RBI Monetary Policy Review: Repo Rate, Liquidity Stance, and Inflation Anchors.
+- `/blog/india-cpi-inflation-trajectory-food-core-dynamics`: India CPI Inflation Trajectory: Food Spikes vs Core Disinflation Dynamics.
+- `/blog/banking-liquidity-deficit-and-call-money-rate-dynamics`: Banking Liquidity Deficit: VRR Operations, Frictional Shocks, and Call Money Rates.
+
+## Official Data Verification Sources
+- Reserve Bank of India (RBI): https://www.rbi.org.in
+- Ministry of Statistics and Programme Implementation (MoSPI): https://www.mospi.gov.in
+- Clearing Corporation of India Limited (CCIL): https://www.ccilindia.com
+- Ministry of Finance, Government of India: https://finmin.nic.in
