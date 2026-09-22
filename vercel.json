@@ -1,6 +1,20 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.macronest.online"
+        }
+      ],
+      "destination": "https://macronest.online/:path*",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/data/metrics.csv",
@@ -33,6 +47,13 @@
       ]
     },
     {
+      "source": "/calendar",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" },
+        { "key": "Content-Type", "value": "text/html; charset=utf-8" }
+      ]
+    },
+    {
       "source": "/api/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
@@ -42,7 +63,23 @@
   ],
   "rewrites": [
     {
+      "source": "/calendar",
+      "destination": "/calendar/index.html"
+    },
+    {
+      "source": "/calendar/",
+      "destination": "/calendar/index.html"
+    },
+    {
+      "source": "/calendar/:path*",
+      "destination": "/calendar/index.html"
+    },
+    {
       "source": "/((?!data/|assets/|favicon|robots\\.txt|sitemap\\.xml|llms\\.txt|metrics\\.csv|google.*\\.html).*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]

@@ -13,6 +13,17 @@ dotenv.config();
 const app = express();
 const PORT = 3000;
 
+// Canonical domain redirect: www.macronest.online -> macronest.online (301 Permanent)
+app.use((req, res, next) => {
+  const host = req.headers.host || '';
+  if (host.startsWith('www.')) {
+    const nonWwwHost = host.slice(4);
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
+    return res.redirect(301, `${protocol}://${nonWwwHost}${req.originalUrl}`);
+  }
+  next();
+});
+
 // Body Parsers & Upload Configuration
 app.use(express.json({ limit: '20mb' }));
 app.use(express.urlencoded({ extended: true, limit: '20mb' }));
@@ -272,6 +283,22 @@ app.get('/llms.txt', (_req, res) => {
   if (fs.existsSync(pubPath)) return res.sendFile(pubPath);
   res.status(404).send('llms.txt not found');
 });
+
+/**
+ * Dedicated Calendar route with prerendered SEO HTML fallback
+ */
+app.get(['/calendar', '/calendar/'], (_req, res) => {
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+  const distCalendar = path.join(process.cwd(), 'dist', 'calendar', 'index.html');
+  if (fs.existsSync(distCalendar)) return res.sendFile(distCalendar);
+  const rootCalendar = path.join(process.cwd(), 'calendar', 'index.html');
+  if (fs.existsSync(rootCalendar)) return res.sendFile(rootCalendar);
+  const distIndex = path.join(process.cwd(), 'dist', 'index.html');
+  if (fs.existsSync(distIndex)) return res.sendFile(distIndex);
+  return res.sendFile(path.join(process.cwd(), 'index.html'));
+});
+
 
 /**
  * Support for Google Search Console HTML verification file

@@ -236,6 +236,15 @@ export default function App() {
         robots: 'noindex, nofollow',
       });
     }
+
+    // Google Analytics page_view trigger for SPA navigation
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'page_view', {
+        page_title: document.title,
+        page_location: window.location.href,
+        page_path: window.location.pathname,
+      });
+    }
   }, [currentView]);
 
   // Navigate view and update URL history
