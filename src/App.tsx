@@ -6,7 +6,7 @@ import { AdminLogin } from './components/AdminLogin.tsx';
 import { AdminPasswordChangeModal } from './components/AdminPasswordChangeModal.tsx';
 import { MacroCalendarView } from './components/MacroCalendarView.tsx';
 import { MetricEditorModal } from './components/MetricEditorModal.tsx';
-import { MacroMetric, MacroCalendarTemplate } from './types.ts';
+import { MacroMetric } from './types.ts';
 import { updatePageSEO } from './utils/seo.ts';
 import { parseMetricsCSV } from './utils/csvParser.ts';
 import { DEFAULT_MACRO_METRICS } from './data/defaultMetrics.ts';
@@ -453,33 +453,6 @@ export default function App() {
     }
   };
 
-  // Template select helper from Macro Calendar
-  const handleSelectTemplateToCreate = (template: MacroCalendarTemplate) => {
-    const newMetricTemplate: Partial<MacroMetric> = {
-      title: template.report,
-      category: template.category,
-      frequency: template.frequency,
-      value: '',
-      unit: template.defaultUnit,
-      deltaValue: '',
-      deltaType: 'neutral',
-      targetAnchor: template.defaultTargetAnchor,
-      summary: template.note || '',
-      sourceName: template.source,
-      sourceUrl: template.sourceUrl,
-      releaseDate: new Date().toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      }),
-      releaseWindow: template.window,
-      isPublished: true,
-    };
-
-    setEditingMetric(newMetricTemplate as MacroMetric);
-    setIsEditorOpen(true);
-  };
-
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
       {/* Sticky Header with Day/Dark mode toggle */}
@@ -534,11 +507,7 @@ export default function App() {
             />
           )
         ) : currentView === 'calendar' ? (
-          <MacroCalendarView
-            onSelectTemplateToCreate={(tmpl) => {
-              handleSelectTemplateToCreate(tmpl);
-            }}
-          />
+          <MacroCalendarView />
         ) : (
           <PublicDashboard metrics={metrics} />
         )}
@@ -555,15 +524,6 @@ export default function App() {
             </div>
 
             <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs">
-              <button
-                type="button"
-                onClick={() => handleViewChange('admin')}
-                className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer font-medium"
-                title="Open Content & Data Admin Portal"
-              >
-                Admin Portal
-              </button>
-              <span className="text-slate-300 dark:text-slate-700">•</span>
               <a
                 href="/data/metrics.csv"
                 target="_blank"
