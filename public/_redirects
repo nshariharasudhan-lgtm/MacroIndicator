@@ -1,3 +1,5 @@
+/admin        /admin/index.html      200
+/admin/*      /admin/index.html      200
 /calendar    /calendar/index.html   200
 /calendar/*  /calendar/index.html   200
 /calculator  /calculator/index.html 200

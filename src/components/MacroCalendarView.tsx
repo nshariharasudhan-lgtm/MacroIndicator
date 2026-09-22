@@ -6,11 +6,37 @@ import {
   CheckCircle,
   HelpCircle,
   CalendarCheck,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react';
 import { INDIA_MACRO_CALENDAR_TEMPLATES } from '../data/macroCalendar.ts';
 
 export const MacroCalendarView: FC = () => {
   const [activeTab, setActiveTab] = useState<'monthly' | 'bimonthly_quarterly' | 'daily_weekly' | 'cadence'>('monthly');
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  const calendarFaqs = [
+    {
+      q: 'When does the RBI Monetary Policy Committee (MPC) announce repo rate decisions?',
+      a: 'The RBI Monetary Policy Committee meets bimonthly (six times a year), typically in February, April, June, August, October, and December. The policy resolution, interest rate decisions, and growth/inflation projections are announced at 10:00 AM IST on the final day of the 3-day MPC meeting.',
+    },
+    {
+      q: "On what day is India's Retail CPI Inflation data released?",
+      a: "India's headline Consumer Price Index (CPI) retail inflation is published monthly by the National Statistical Office (NSO), Ministry of Statistics and Programme Implementation (MoSPI), usually on the 12th of every month at 5:30 PM IST (or the preceding working day if the 12th falls on a weekend or public holiday).",
+    },
+    {
+      q: "When is India's quarterly GDP growth data published?",
+      a: 'Quarterly Gross Domestic Product (GDP) and Gross Value Added (GVA) estimates are published by MoSPI on the last working day of May (Q4 Jan-Mar), August (Q1 Apr-Jun), November (Q2 Jul-Sep), and February (Q3 Oct-Dec).',
+    },
+    {
+      q: 'Where and when is daily banking system liquidity data updated?',
+      a: 'Net systemic banking liquidity (deficit or surplus) is published every evening around 5:00 PM IST by the Reserve Bank of India and the Clearing Corporation of India Limited (CCIL), tracking reverse repo, repo, MSF, and Standing Deposit Facility (SDF) net absorption and injection.',
+    },
+    {
+      q: "How frequently are India's Foreign Exchange (Forex) Reserves announced?",
+      a: 'The Reserve Bank of India releases official Foreign Exchange Reserves figures weekly in its Weekly Statistical Supplement (WSS) every Friday at 5:00 PM IST, covering total reserves ($bn), foreign currency assets (FCA), gold reserves, and Special Drawing Rights (SDRs).',
+    },
+  ];
 
   const monthlyItems = INDIA_MACRO_CALENDAR_TEMPLATES.filter((t) => t.cycle === 'monthly');
   const bimonthlyQuarterlyItems = INDIA_MACRO_CALENDAR_TEMPLATES.filter((t) => t.cycle === 'bimonthly_quarterly');
@@ -355,6 +381,43 @@ export const MacroCalendarView: FC = () => {
           </div>
         </div>
       )}
+
+      {/* ========================================================================= */}
+      {/* FREQUENTLY ASKED QUESTIONS (SEARCH INTENT / FAQPAGE SCHEMA ALIGNED) */}
+      {/* ========================================================================= */}
+      <section className="pt-8 border-t border-slate-200 dark:border-slate-800">
+        <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+          <HelpCircle className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+          <span>Frequently Asked Questions on India Economic Releases</span>
+        </h2>
+
+        <div className="space-y-3">
+          {calendarFaqs.map((faq, idx) => (
+            <div
+              key={idx}
+              className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden bg-white dark:bg-slate-900 transition-colors"
+            >
+              <button
+                onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                className="w-full text-left p-4 font-bold text-sm text-slate-900 dark:text-white flex justify-between items-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50"
+              >
+                <span>{faq.q}</span>
+                {openFaq === idx ? (
+                  <ChevronUp className="w-4 h-4 text-slate-500 shrink-0 ml-2" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-slate-500 shrink-0 ml-2" />
+                )}
+              </button>
+
+              {openFaq === idx && (
+                <div className="px-4 pb-4 pt-1 text-xs text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-100 dark:border-slate-800/80">
+                  {faq.a}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 };

@@ -768,6 +768,15 @@ async function startServer() {
   } else {
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
+    app.get(['/calendar', '/calendar/*'], (_req, res) => {
+      res.sendFile(path.join(distPath, 'calendar/index.html'));
+    });
+    app.get(['/calculator', '/calculator/*'], (_req, res) => {
+      res.sendFile(path.join(distPath, 'calculator/index.html'));
+    });
+    app.get(['/admin', '/admin/*'], (_req, res) => {
+      res.sendFile(path.join(distPath, 'admin/index.html'));
+    });
     app.get('*', (_req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });

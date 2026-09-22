@@ -246,6 +246,10 @@ export const RepoRateCalculator: React.FC<RepoRateCalculatorProps> = ({
       q: 'Are Fixed Deposit (FD) rates immediately affected by repo rate cuts?',
       a: 'Unlike retail floating loans which are contractually bound to external benchmarks within 90 days, bank deposit interest rates are determined by asset-liability committees (ALCO) based on systemic banking liquidity. When the repo rate falls and liquidity is in surplus, banks typically trim fresh fixed deposit interest rates across 1 to 5-year buckets.',
     },
+    {
+      q: 'How does inflation affect my Fixed Deposit real returns?',
+      a: 'The real return on a Fixed Deposit is calculated by subtracting headline CPI inflation from the nominal FD interest rate after accounting for taxes. When CPI inflation is 3.65% and an FD offers 7.00%, the pre-tax real rate of return is approximately 3.35%.',
+    },
   ];
 
   return (
