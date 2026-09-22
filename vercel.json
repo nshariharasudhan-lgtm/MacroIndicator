@@ -19,6 +19,20 @@
       ]
     },
     {
+      "source": "/sitemap.xml",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=3600" },
+        { "key": "Content-Type", "value": "application/xml; charset=utf-8" }
+      ]
+    },
+    {
+      "source": "/robots.txt",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=3600" },
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" }
+      ]
+    },
+    {
       "source": "/api/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
@@ -28,7 +42,7 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!data/|assets/|favicon|robots\\.txt|sitemap\\.xml|llms\\.txt|metrics\\.csv).*)",
+      "source": "/((?!data/|assets/|favicon|robots\\.txt|sitemap\\.xml|llms\\.txt|metrics\\.csv|google.*\\.html).*)",
       "destination": "/index.html"
     }
   ]

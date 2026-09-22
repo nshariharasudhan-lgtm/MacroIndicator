@@ -1,25 +1,24 @@
-# India Macro Indicators & Economic Monitor
+# MacroNest.online — India Macroeconomic Indicators & Research
 
-> Official and independent monitor for Indian macroeconomic indicators, banking system liquidity, monetary policy anchors, and macroeconomic research.
+> MacroNest.online ("Knowledge Today, A Brighter Tomorrow") is a dedicated macroeconomic data monitor tracking Indian central banking policy rates, systemic liquidity deficit/surplus, retail and wholesale inflation prints, foreign exchange reserves, gross GST collections, and gross domestic product (GDP) metrics directly from official statutory feeds.
 
-## Core Capabilities
-- Real-time tracking of Reserve Bank of India (RBI) repo rate, SDF, and MSF corridor anchors.
-- Systemic banking liquidity deficit / surplus monitoring via CCIL and RBI WSS feeds.
-- Consumer Price Index (CPI) and Wholesale Price Index (WPI) headline vs core inflation prints.
-- Foreign Exchange (Forex) reserve health and import cover metrics.
-- Macroeconomic Release Calendar with official publishing frequencies and statutory release windows.
-- Full research analyses covering monetary policy, fiscal deficits, liquidity management, and sovereign debt.
+## Core Capabilities & Monitored Metrics
+- **Reserve Bank of India (RBI) Policy Rates**: Official repo rate, Standing Deposit Facility (SDF), and Marginal Standing Facility (MSF) corridor anchors set by the Monetary Policy Committee (MPC).
+- **Banking System Liquidity**: Daily systemic net liquidity deficit or surplus published by the Clearing Corporation of India Limited (CCIL) and RBI.
+- **Consumer Price Index (CPI)**: Headline and core retail inflation year-on-year prints compiled and published monthly by MoSPI.
+- **Foreign Exchange (Forex) Reserves**: Weekly statistical supplement (WSS) prints of total foreign currency assets, gold, and SDR holdings.
+- **Gross Goods & Services Tax (GST)**: Monthly gross nationwide collections reported by the Ministry of Finance.
+- **Macroeconomic Release Calendar**: Statutory publishing windows for RBI MPC policy decisions, MoSPI data releases, and national statistics.
 
-## Key Sections & Canonical URLs
-- **Homepage & Indicator Monitor**: `/`
-  Real-time tracking of all active macro indicators with category filters, frequency selectors, delta changes, and target anchors.
-- **Macroeconomic Release Calendar**: `/calendar`
-  Official schedules for RBI MPC decisions, CPI inflation releases, GDP quarterly prints, Index of Industrial Production (IIP), and Forex WSS announcements.
-- **Direct CSV Data Feed**: `/data/metrics.csv`
-  Official comma-separated dataset containing all verified Indian macroeconomic parameters.
+## Canonical URLs & Feeds
+- **Homepage & Public Indicator Dashboard**: https://macronest.online/
+- **Macroeconomic Release Calendar**: https://macronest.online/calendar
+- **Direct Machine-Readable CSV Feed**: https://macronest.online/data/metrics.csv
+- **XML Sitemap**: https://macronest.online/sitemap.xml
+- **Robots Directives**: https://macronest.online/robots.txt
 
-## Official Data Verification Sources
+## Primary Official Data Sources
 - Reserve Bank of India (RBI): https://www.rbi.org.in
 - Ministry of Statistics and Programme Implementation (MoSPI): https://www.mospi.gov.in
-- Clearing Corporation of India Limited (CCIL): https://www.ccilindia.com
 - Ministry of Finance, Government of India: https://finmin.nic.in
+- Clearing Corporation of India Limited (CCIL): https://www.ccilindia.com

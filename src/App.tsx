@@ -202,6 +202,42 @@ export default function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, [parseUrlState]);
 
+  // Synchronize document SEO and Canonical URL whenever view changes
+  useEffect(() => {
+    if (currentView === 'dashboard') {
+      updatePageSEO({
+        title: 'MacroNest.online | India Macroeconomic Indicators & Research',
+        description:
+          'MacroNest.online - Knowledge Today, A Brighter Tomorrow. Track Indian macroeconomic indicators, RBI repo rate anchors, banking system liquidity, CPI inflation, forex reserves, and GDP prints directly from official statutory feeds.',
+        canonicalUrl: 'https://macronest.online/',
+        robots: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+      });
+    } else if (currentView === 'calendar') {
+      updatePageSEO({
+        title: 'India Macro Data Release Calendar | MacroNest.online',
+        description:
+          'Official release schedule and publication calendar for Indian economic data, including RBI MPC decisions, CPI inflation, GDP prints, and MoSPI releases.',
+        canonicalUrl: 'https://macronest.online/calendar',
+        robots: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+        structuredData: {
+          '@context': 'https://schema.org',
+          '@type': 'Schedule',
+          name: 'India Macro Data Release Calendar',
+          description:
+            'Official release schedule for Indian macroeconomic indicators and RBI monetary policy committee announcements.',
+          url: 'https://macronest.online/calendar',
+        },
+      });
+    } else if (currentView === 'admin') {
+      updatePageSEO({
+        title: 'Admin Portal | MacroNest.online',
+        description: 'MacroNest.online Administrator Content & Data Management Portal.',
+        canonicalUrl: 'https://macronest.online/admin',
+        robots: 'noindex, nofollow',
+      });
+    }
+  }, [currentView]);
+
   // Navigate view and update URL history
   const handleViewChange = (view: 'dashboard' | 'admin' | 'calendar') => {
     setCurrentView(view);
@@ -212,14 +248,6 @@ export default function App() {
 
     if (window.location.pathname !== targetPath) {
       window.history.pushState(null, '', targetPath);
-    }
-
-    if (view === 'dashboard') {
-      updatePageSEO({
-        title: 'India Macro Indicators | Official Central Economic Monitor',
-        description:
-          'Official macroeconomic dashboard tracking India banking liquidity, repo rate anchors, CPI inflation, forex reserves, and GDP prints directly from verified data feeds.',
-      });
     }
   };
 

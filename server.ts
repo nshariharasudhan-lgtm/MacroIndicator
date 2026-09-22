@@ -243,6 +243,52 @@ app.get(['/data/metrics.csv', '/metrics.csv'], (_req, res) => {
 });
 
 /**
+ * Explicit SEO routes for Google Search Console and web crawlers
+ */
+app.get('/robots.txt', (_req, res) => {
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=3600');
+  const pubPath = path.join(process.cwd(), 'public', 'robots.txt');
+  const distPath = path.join(process.cwd(), 'dist', 'robots.txt');
+  if (fs.existsSync(pubPath)) return res.sendFile(pubPath);
+  if (fs.existsSync(distPath)) return res.sendFile(distPath);
+  res.status(404).send('robots.txt not found');
+});
+
+app.get('/sitemap.xml', (_req, res) => {
+  res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=3600');
+  const pubPath = path.join(process.cwd(), 'public', 'sitemap.xml');
+  const distPath = path.join(process.cwd(), 'dist', 'sitemap.xml');
+  if (fs.existsSync(pubPath)) return res.sendFile(pubPath);
+  if (fs.existsSync(distPath)) return res.sendFile(distPath);
+  res.status(404).send('sitemap.xml not found');
+});
+
+app.get('/llms.txt', (_req, res) => {
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=3600');
+  const pubPath = path.join(process.cwd(), 'public', 'llms.txt');
+  if (fs.existsSync(pubPath)) return res.sendFile(pubPath);
+  res.status(404).send('llms.txt not found');
+});
+
+/**
+ * Support for Google Search Console HTML verification file
+ * Matches any request formatted as /google[token].html
+ */
+app.get('/google:token([a-zA-Z0-9_-]+).html', (req, res) => {
+  const fileName = `google${req.params.token}.html`;
+  const pubPath = path.join(process.cwd(), 'public', fileName);
+  if (fs.existsSync(pubPath)) {
+    return res.sendFile(pubPath);
+  }
+  // Standard Google verification response body
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.send(`google-site-verification: google${req.params.token}.html`);
+});
+
+/**
  * GET /api/metrics/export-csv
  * Triggers a download of the latest metrics.csv file
  */

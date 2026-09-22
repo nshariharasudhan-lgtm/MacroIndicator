@@ -1,20 +1,37 @@
-# Robots.txt for India Macroeconomic Indicators & Research Dashboard
+# Robots.txt for MacroNest.online - India Macroeconomic Indicators & Research
+# Canonical URL: https://macronest.online/
+
 User-agent: *
 Allow: /
-Allow: /blog
-Allow: /blog/*
 Allow: /calendar
+Allow: /data/metrics.csv
+Allow: /metrics.csv
 Allow: /sitemap.xml
+Allow: /robots.txt
 Allow: /llms.txt
 Disallow: /admin
 Disallow: /admin/*
 Disallow: /api/admin
 Disallow: /api/admin/*
 
-# AI Search Crawlers & Retrieval Bots
+# Googlebot specific rules
 User-agent: Googlebot
 Allow: /
+Allow: /calendar
+Allow: /data/metrics.csv
+Allow: /metrics.csv
+Allow: /sitemap.xml
+Allow: /robots.txt
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /api/admin
+Disallow: /api/admin/*
 
+User-agent: Googlebot-Image
+Allow: /
+Allow: /macronest-logo.svg
+
+# AI Search & Retrieval Crawlers
 User-agent: Google-Extended
 Allow: /
 
@@ -31,9 +48,6 @@ User-agent: anthropic-ai
 Allow: /
 
 User-agent: PerplexityBot
-Allow: /
-
-User-agent: Cohere-ai
 Allow: /
 
 User-agent: Applebot-Extended
