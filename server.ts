@@ -290,12 +290,14 @@ app.get('/llms.txt', (_req, res) => {
 app.get(['/calendar', '/calendar/'], (_req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
-  const distCalendar = path.join(process.cwd(), 'dist', 'calendar', 'index.html');
-  if (fs.existsSync(distCalendar)) return res.sendFile(distCalendar);
+  if (process.env.NODE_ENV === 'production') {
+    const distCalendar = path.join(process.cwd(), 'dist', 'calendar', 'index.html');
+    if (fs.existsSync(distCalendar)) return res.sendFile(distCalendar);
+    const distIndex = path.join(process.cwd(), 'dist', 'index.html');
+    if (fs.existsSync(distIndex)) return res.sendFile(distIndex);
+  }
   const rootCalendar = path.join(process.cwd(), 'calendar', 'index.html');
   if (fs.existsSync(rootCalendar)) return res.sendFile(rootCalendar);
-  const distIndex = path.join(process.cwd(), 'dist', 'index.html');
-  if (fs.existsSync(distIndex)) return res.sendFile(distIndex);
   return res.sendFile(path.join(process.cwd(), 'index.html'));
 });
 
@@ -305,12 +307,14 @@ app.get(['/calendar', '/calendar/'], (_req, res) => {
 app.get(['/calculator', '/calculator/'], (_req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
-  const distCalc = path.join(process.cwd(), 'dist', 'calculator', 'index.html');
-  if (fs.existsSync(distCalc)) return res.sendFile(distCalc);
+  if (process.env.NODE_ENV === 'production') {
+    const distCalc = path.join(process.cwd(), 'dist', 'calculator', 'index.html');
+    if (fs.existsSync(distCalc)) return res.sendFile(distCalc);
+    const distIndex = path.join(process.cwd(), 'dist', 'index.html');
+    if (fs.existsSync(distIndex)) return res.sendFile(distIndex);
+  }
   const rootCalc = path.join(process.cwd(), 'calculator', 'index.html');
   if (fs.existsSync(rootCalc)) return res.sendFile(rootCalc);
-  const distIndex = path.join(process.cwd(), 'dist', 'index.html');
-  if (fs.existsSync(distIndex)) return res.sendFile(distIndex);
   return res.sendFile(path.join(process.cwd(), 'index.html'));
 });
 

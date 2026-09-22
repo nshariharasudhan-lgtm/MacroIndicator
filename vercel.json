@@ -2,19 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
-  "redirects": [
-    {
-      "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.macronest.online"
-        }
-      ],
-      "destination": "https://macronest.online/:path*",
-      "permanent": true
-    }
-  ],
   "headers": [
     {
       "source": "/data/metrics.csv",
@@ -94,11 +81,7 @@
       "destination": "/calculator/index.html"
     },
     {
-      "source": "/((?!data/|assets/|favicon|robots\\.txt|sitemap\\.xml|llms\\.txt|metrics\\.csv|google.*\\.html).*)",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/(.*)",
+      "source": "/((?!api/|data/|assets/|.*\\..*).*)",
       "destination": "/index.html"
     }
   ]
