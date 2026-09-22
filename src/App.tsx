@@ -5,6 +5,7 @@ import { AdminDashboard } from './components/AdminDashboard.tsx';
 import { AdminLogin } from './components/AdminLogin.tsx';
 import { AdminPasswordChangeModal } from './components/AdminPasswordChangeModal.tsx';
 import { MacroCalendarView } from './components/MacroCalendarView.tsx';
+import { RepoRateCalculator } from './components/RepoRateCalculator.tsx';
 import { MetricEditorModal } from './components/MetricEditorModal.tsx';
 import { MacroMetric } from './types.ts';
 import { updatePageSEO } from './utils/seo.ts';
@@ -31,7 +32,7 @@ export default function App() {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'admin' | 'calendar'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'admin' | 'calendar' | 'calculator'>('dashboard');
   const [isEditorOpen, setIsEditorOpen] = useState<boolean>(false);
   const [editingMetric, setEditingMetric] = useState<MacroMetric | null>(null);
 
@@ -178,12 +179,14 @@ export default function App() {
   }, []);
 
   // Path-based client routing
-  const parseUrlState = useCallback((): 'dashboard' | 'admin' | 'calendar' => {
+  const parseUrlState = useCallback((): 'dashboard' | 'admin' | 'calendar' | 'calculator' => {
     const path = window.location.pathname.toLowerCase();
     if (path.startsWith('/admin')) {
       return 'admin';
     } else if (path.startsWith('/calendar')) {
       return 'calendar';
+    } else if (path.startsWith('/calculator')) {
+      return 'calculator';
     }
     return 'dashboard';
   }, []);
@@ -228,6 +231,22 @@ export default function App() {
           url: 'https://macronest.online/calendar',
         },
       });
+    } else if (currentView === 'calculator') {
+      updatePageSEO({
+        title: 'RBI Repo Rate EMI & Savings Calculator | MacroNest.online',
+        description:
+          'Simulate how RBI repo rate changes affect your Home Loan EMI, tenure, and bank Fixed Deposit returns with official External Benchmark Lending Rate (EBLR) formulas.',
+        canonicalUrl: 'https://macronest.online/calculator',
+        robots: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+        structuredData: {
+          '@context': 'https://schema.org',
+          '@type': 'FinancialProduct',
+          name: 'RBI Repo Rate EMI & Savings Calculator',
+          description:
+            'Interactive Indian macroeconomic calculator simulating the effect of RBI MPC policy repo rate adjustments on retail floating loans and fixed deposits.',
+          url: 'https://macronest.online/calculator',
+        },
+      });
     } else if (currentView === 'admin') {
       updatePageSEO({
         title: 'Admin Portal | MacroNest.online',
@@ -248,12 +267,13 @@ export default function App() {
   }, [currentView]);
 
   // Navigate view and update URL history
-  const handleViewChange = (view: 'dashboard' | 'admin' | 'calendar') => {
+  const handleViewChange = (view: 'dashboard' | 'admin' | 'calendar' | 'calculator') => {
     setCurrentView(view);
 
     let targetPath = '/';
     if (view === 'admin') targetPath = '/admin';
     else if (view === 'calendar') targetPath = '/calendar';
+    else if (view === 'calculator') targetPath = '/calculator';
 
     if (window.location.pathname !== targetPath) {
       window.history.pushState(null, '', targetPath);
@@ -545,8 +565,16 @@ export default function App() {
           )
         ) : currentView === 'calendar' ? (
           <MacroCalendarView />
+        ) : currentView === 'calculator' ? (
+          <RepoRateCalculator
+            metrics={metrics}
+            onNavigateHome={() => handleViewChange('dashboard')}
+          />
         ) : (
-          <PublicDashboard metrics={metrics} />
+          <PublicDashboard
+            metrics={metrics}
+            onOpenCalculator={() => handleViewChange('calculator')}
+          />
         )}
       </main>
 
@@ -561,6 +589,22 @@ export default function App() {
             </div>
 
             <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs">
+              <button
+                onClick={() => handleViewChange('calculator')}
+                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-semibold text-slate-700 dark:text-slate-300 cursor-pointer"
+                title="RBI Repo Rate EMI & Savings Calculator"
+              >
+                EMI Calculator
+              </button>
+              <span className="text-slate-300 dark:text-slate-700">•</span>
+              <button
+                onClick={() => handleViewChange('calendar')}
+                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
+                title="India Macro Data Release Calendar"
+              >
+                Calendar
+              </button>
+              <span className="text-slate-300 dark:text-slate-700">•</span>
               <a
                 href="/data/metrics.csv"
                 target="_blank"

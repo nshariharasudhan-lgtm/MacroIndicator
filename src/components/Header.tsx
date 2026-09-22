@@ -3,8 +3,8 @@ import { Sun, Moon } from 'lucide-react';
 import { MacroNestLogo } from './MacroNestLogo.tsx';
 
 interface HeaderProps {
-  currentView: 'dashboard' | 'admin' | 'calendar';
-  onViewChange: (view: 'dashboard' | 'admin' | 'calendar') => void;
+  currentView: 'dashboard' | 'admin' | 'calendar' | 'calculator';
+  onViewChange: (view: 'dashboard' | 'admin' | 'calendar' | 'calculator') => void;
   darkMode: boolean;
   onToggleDarkMode: () => void;
   metricsCount: number;
@@ -38,12 +38,12 @@ export const Header: FC<HeaderProps> = ({
         </div>
 
         {/* Center: Clean public navigation */}
-        {currentView !== 'admin' && currentView !== 'calendar' ? (
+        {currentView !== 'admin' ? (
           <nav id="top-public-nav" className="flex items-center gap-1 sm:gap-2">
             <button
               id="top-nav-indicators"
               onClick={() => onViewChange('dashboard')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                 currentView === 'dashboard'
                   ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
@@ -55,16 +55,35 @@ export const Header: FC<HeaderProps> = ({
             <button
               id="top-nav-calendar"
               onClick={() => onViewChange('calendar')}
-              className="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer"
+              className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                currentView === 'calendar'
+                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+              }`}
             >
-              <span>Release Calendar</span>
+              <span>Calendar</span>
+            </button>
+
+            <button
+              id="top-nav-calculator"
+              onClick={() => onViewChange('calculator')}
+              className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                currentView === 'calculator'
+                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+              }`}
+            >
+              <span>EMI Calculator</span>
+              <span className="hidden md:inline text-[10px] font-extrabold uppercase px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-600 dark:text-amber-400">
+                New
+              </span>
             </button>
           </nav>
         ) : (
-          /* If in Admin or Calendar mode, show mode label and back button */
+          /* If in Admin mode, show mode label and back button */
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold px-2.5 py-1 rounded-md bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300 uppercase tracking-wider">
-              {currentView === 'admin' ? 'Admin Portal' : 'Macro Calendar'}
+              Admin Portal
             </span>
             <button
               onClick={() => onViewChange('dashboard')}

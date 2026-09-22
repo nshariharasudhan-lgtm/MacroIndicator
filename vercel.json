@@ -54,6 +54,13 @@
       ]
     },
     {
+      "source": "/calculator",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" },
+        { "key": "Content-Type", "value": "text/html; charset=utf-8" }
+      ]
+    },
+    {
       "source": "/api/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
@@ -73,6 +80,18 @@
     {
       "source": "/calendar/:path*",
       "destination": "/calendar/index.html"
+    },
+    {
+      "source": "/calculator",
+      "destination": "/calculator/index.html"
+    },
+    {
+      "source": "/calculator/",
+      "destination": "/calculator/index.html"
+    },
+    {
+      "source": "/calculator/:path*",
+      "destination": "/calculator/index.html"
     },
     {
       "source": "/((?!data/|assets/|favicon|robots\\.txt|sitemap\\.xml|llms\\.txt|metrics\\.csv|google.*\\.html).*)",

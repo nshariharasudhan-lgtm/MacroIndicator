@@ -1,14 +1,15 @@
 import { FC, useState, useMemo } from 'react';
-import { Search } from 'lucide-react';
+import { Search, Calculator, ArrowRight } from 'lucide-react';
 import { MacroMetric } from '../types.ts';
 import { MetricCard } from './MetricCard.tsx';
 import { EmptyState } from './EmptyState.tsx';
 
 interface PublicDashboardProps {
   metrics: MacroMetric[];
+  onOpenCalculator?: () => void;
 }
 
-export const PublicDashboard: FC<PublicDashboardProps> = ({ metrics }) => {
+export const PublicDashboard: FC<PublicDashboardProps> = ({ metrics, onOpenCalculator }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCadence, setSelectedCadence] = useState<string>('ALL');
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
@@ -117,6 +118,40 @@ export const PublicDashboard: FC<PublicDashboardProps> = ({ metrics }) => {
           />
         </div>
       </div>
+
+      {/* Featured Interactive Tool Banner */}
+      {onOpenCalculator && (
+        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-blue-50/80 via-slate-50 to-amber-50/70 dark:from-slate-900/90 dark:via-slate-900 dark:to-slate-800/80 border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+              <Calculator className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 mb-0.5">
+                <span className="text-[11px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
+                  Interactive Simulator
+                </span>
+                <span className="text-[10px] bg-amber-400 text-slate-950 font-black px-1.5 py-0.5 rounded-full">
+                  NEW
+                </span>
+              </div>
+              <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+                RBI Repo Rate Impact on Home Loan EMI &amp; Bank Fixed Deposits
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Simulate how RBI MPC rate cuts or hikes pass through to floating loans (EBLR) and term deposits.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onOpenCalculator}
+            className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-900 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 justify-center shadow-xs"
+          >
+            <span>Open Calculator</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
 
       {/* Indicators Grid */}
       {filteredMetrics.length === 0 ? (

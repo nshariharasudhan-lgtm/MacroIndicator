@@ -16,6 +16,7 @@ export default defineConfig(() => {
         input: {
           main: path.resolve(__dirname, 'index.html'),
           calendar: path.resolve(__dirname, 'calendar/index.html'),
+          calculator: path.resolve(__dirname, 'calculator/index.html'),
         },
       },
     },

@@ -299,6 +299,21 @@ app.get(['/calendar', '/calendar/'], (_req, res) => {
   return res.sendFile(path.join(process.cwd(), 'index.html'));
 });
 
+/**
+ * Dedicated Calculator route with prerendered SEO HTML fallback
+ */
+app.get(['/calculator', '/calculator/'], (_req, res) => {
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+  const distCalc = path.join(process.cwd(), 'dist', 'calculator', 'index.html');
+  if (fs.existsSync(distCalc)) return res.sendFile(distCalc);
+  const rootCalc = path.join(process.cwd(), 'calculator', 'index.html');
+  if (fs.existsSync(rootCalc)) return res.sendFile(rootCalc);
+  const distIndex = path.join(process.cwd(), 'dist', 'index.html');
+  if (fs.existsSync(distIndex)) return res.sendFile(distIndex);
+  return res.sendFile(path.join(process.cwd(), 'index.html'));
+});
+
 
 /**
  * Support for Google Search Console HTML verification file
