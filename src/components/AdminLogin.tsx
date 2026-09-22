@@ -1,7 +1,6 @@
 import { FC, useState } from 'react';
 import { Lock, Eye, EyeOff, ShieldCheck, AlertCircle } from 'lucide-react';
 import { MacroNestLogo } from './MacroNestLogo.tsx';
-import { verifyAdminPasswordWithSupabase } from '../utils/supabase.ts';
 
 interface AdminLoginProps {
   onLoginSuccess: (token: string, mustChangePassword: boolean) => void;
@@ -25,8 +24,7 @@ export const AdminLogin: FC<AdminLoginProps> = ({ onLoginSuccess, onCancel }) =>
     setError(null);
 
     try {
-      // 1. First attempt backend API (runs when full Express server is available)
-      let backendResolved = false;
+      // 1. Backend API authentication
       try {
         const res = await fetch('/api/admin/login', {
           method: 'POST',
@@ -36,7 +34,6 @@ export const AdminLogin: FC<AdminLoginProps> = ({ onLoginSuccess, onCancel }) =>
 
         const contentType = res.headers.get('content-type') || '';
         if (res.ok && contentType.includes('application/json')) {
-          backendResolved = true;
           const data = await res.json();
           if (data.success) {
             onLoginSuccess(data.token, Boolean(data.mustChangePassword));
@@ -46,56 +43,28 @@ export const AdminLogin: FC<AdminLoginProps> = ({ onLoginSuccess, onCancel }) =>
             return;
           }
         } else if (res.status === 401 && contentType.includes('application/json')) {
-          backendResolved = true;
           const data = await res.json();
           setError(data.error || 'Incorrect admin password.');
           return;
         }
       } catch (backendErr) {
-        // Backend unavailable or static hosting; proceed to direct Supabase verification
-        console.info('Backend API unavailable, falling back to direct Supabase verification...');
+        console.info('Backend API unavailable, using local authentication...');
       }
 
-      if (!backendResolved) {
-        // 2. Direct Supabase verification (for deployed static/Vercel sites)
-        const sbResult = await verifyAdminPasswordWithSupabase(password);
-        if (sbResult.success) {
-          const fallbackToken = 'admin-sb-' + Date.now();
-          sessionStorage.setItem('admin_token', fallbackToken);
-          localStorage.setItem('admin_token', fallbackToken);
-          onLoginSuccess(fallbackToken, false);
-          return;
-        }
-
-        // 3. Fallback for initial default credentials or offline
-        const DEFAULT_ADMIN_PASS = 'AdminMacro2026!';
-        const storedPass = localStorage.getItem('macro_admin_pass') || DEFAULT_ADMIN_PASS;
-        if (password.trim() === storedPass || password.trim() === DEFAULT_ADMIN_PASS) {
-          const fallbackToken = 'admin-client-session-' + Date.now();
-          sessionStorage.setItem('admin_token', fallbackToken);
-          localStorage.setItem('admin_token', fallbackToken);
-          onLoginSuccess(fallbackToken, false);
-          return;
-        }
-
-        if (sbResult.error && sbResult.error.includes('Could not find the function')) {
-          setError(
-            'Supabase RPC verify_admin_password function not found. Please run the SQL schema in Supabase SQL Editor first.'
-          );
-        } else {
-          setError('Invalid password. Please check your credentials.');
-        }
-      }
-    } catch (err) {
-      console.error('Login error:', err);
-      // Final fallback check
-      const DEFAULT_ADMIN_PASS = 'AdminMacro2026!';
+      // 2. Client-side fallback for static preview environments
+      const DEFAULT_ADMIN_PASS = 'MacroNest@Admin2026';
       const storedPass = localStorage.getItem('macro_admin_pass') || DEFAULT_ADMIN_PASS;
-      if (password.trim() === storedPass || password.trim() === DEFAULT_ADMIN_PASS) {
+      if (password.trim() === storedPass || password.trim() === DEFAULT_ADMIN_PASS || password.trim() === 'AdminMacro2026!') {
         const fallbackToken = 'admin-client-session-' + Date.now();
+        sessionStorage.setItem('admin_token', fallbackToken);
+        localStorage.setItem('admin_token', fallbackToken);
         onLoginSuccess(fallbackToken, false);
         return;
       }
+
+      setError('Incorrect admin password. Please try again.');
+    } catch (err: any) {
+      console.error('Login error:', err);
       setError('Connection error while authenticating. Please try again.');
     } finally {
       setLoading(false);
@@ -113,7 +82,7 @@ export const AdminLogin: FC<AdminLoginProps> = ({ onLoginSuccess, onCancel }) =>
             <span>Admin Authentication</span>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Authorized macroeconomic content & database management
+            Direct CSV macroeconomic data management
           </p>
         </div>
 
@@ -185,7 +154,7 @@ export const AdminLogin: FC<AdminLoginProps> = ({ onLoginSuccess, onCancel }) =>
             onClick={onCancel}
             className="text-xs text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 font-medium cursor-pointer"
           >
-            ← Return to Public Dashboard
+            ← Return to Public Indicators
           </button>
         </div>
       </div>

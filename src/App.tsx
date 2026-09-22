@@ -6,20 +6,18 @@ import { AdminLogin } from './components/AdminLogin.tsx';
 import { AdminPasswordChangeModal } from './components/AdminPasswordChangeModal.tsx';
 import { MacroCalendarView } from './components/MacroCalendarView.tsx';
 import { MetricEditorModal } from './components/MetricEditorModal.tsx';
-import { BlogView } from './components/BlogView.tsx';
-import { BlogPostDetail } from './components/BlogPostDetail.tsx';
-import { MacroMetric, MacroCalendarTemplate, BlogPost } from './types.ts';
+import { MacroMetric, MacroCalendarTemplate } from './types.ts';
 import { updatePageSEO } from './utils/seo.ts';
-import { INITIAL_MACRO_METRICS_WITHOUT_NUMBERS } from './data/initialMetrics.ts';
-import { INITIAL_BLOG_POSTS } from './data/initialPosts.ts';
+import { parseMetricsCSV } from './utils/csvParser.ts';
+import { DEFAULT_MACRO_METRICS } from './data/defaultMetrics.ts';
 import { MacroNestLogo } from './components/MacroNestLogo.tsx';
 
 export default function App() {
-  const [metrics, setMetrics] = useState<MacroMetric[]>(INITIAL_MACRO_METRICS_WITHOUT_NUMBERS);
-  const [posts, setPosts] = useState<BlogPost[]>(INITIAL_BLOG_POSTS);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'admin' | 'calendar' | 'blog'>('dashboard');
-  const [selectedPostSlug, setSelectedPostSlug] = useState<string | null>(null);
+  // Initialize with the verified metrics parsed directly from data/metrics.csv
+  const [metrics, setMetrics] = useState<MacroMetric[]>(DEFAULT_MACRO_METRICS);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const [currentView, setCurrentView] = useState<'dashboard' | 'admin' | 'calendar'>('dashboard');
   const [isEditorOpen, setIsEditorOpen] = useState<boolean>(false);
   const [editingMetric, setEditingMetric] = useState<MacroMetric | null>(null);
 
@@ -33,20 +31,14 @@ export default function App() {
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(false);
   const [mustChangePassword, setMustChangePassword] = useState<boolean>(false);
   const [isPasswordChangeModalOpen, setIsPasswordChangeModalOpen] = useState<boolean>(false);
-  const [supabaseStatus, setSupabaseStatus] = useState<{
-    supabaseConfigured: boolean;
-    supabaseUrl: string | null;
-    mode: string;
-    message: string;
-  } | null>(null);
 
-  // Day / Dark mode state — defaults to clean white background as requested
+  // Day / Dark mode state — defaults to clean light theme
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('theme');
       if (saved) return saved === 'dark';
     }
-    return false; // clean white background by default
+    return false;
   });
 
   // Apply dark mode class to document element
@@ -102,23 +94,6 @@ export default function App() {
     }
   }, [adminToken, verifyAuth]);
 
-  // Fetch Database & Supabase connection status
-  const fetchDbStatus = useCallback(async () => {
-    try {
-      const res = await fetch('/api/admin/db-status');
-      if (res.ok) {
-        const data = await res.json();
-        setSupabaseStatus(data);
-      }
-    } catch (err) {
-      console.error('Failed to fetch DB status:', err);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchDbStatus();
-  }, [fetchDbStatus]);
-
   // Handle Login Success
   const handleLoginSuccess = (token: string, mustChange: boolean) => {
     setAdminToken(token);
@@ -146,39 +121,29 @@ export default function App() {
     localStorage.removeItem('admin_token');
   };
 
-  // URL-based routing (Admin Dashboard should be accessible through URL, Blog on top/url)
-  const parseUrlState = useCallback((): {
-    view: 'dashboard' | 'admin' | 'calendar' | 'blog';
-    postSlug: string | null;
-  } => {
-    if (typeof window === 'undefined') return { view: 'dashboard', postSlug: null };
+  // URL-based routing
+  const parseUrlState = useCallback((): 'dashboard' | 'admin' | 'calendar' => {
+    if (typeof window === 'undefined') return 'dashboard';
     const path = window.location.pathname.toLowerCase();
     const search = window.location.search.toLowerCase();
 
     if (path.includes('/admin') || search.includes('admin') || search.includes('view=admin')) {
-      return { view: 'admin', postSlug: null };
+      return 'admin';
     }
     if (path.includes('/calendar') || search.includes('calendar') || search.includes('view=calendar')) {
-      return { view: 'calendar', postSlug: null };
+      return 'calendar';
     }
-    if (path.startsWith('/blog') || search.includes('blog') || search.includes('view=blog')) {
-      const parts = window.location.pathname.split('/').filter(Boolean);
-      const slug = parts[0] === 'blog' && parts[1] ? parts[1] : null;
-      return { view: 'blog', postSlug: slug };
-    }
-    return { view: 'dashboard', postSlug: null };
+    return 'dashboard';
   }, []);
 
   // Initialize view from URL and handle browser popstate
   useEffect(() => {
-    const state = parseUrlState();
-    setCurrentView(state.view);
-    setSelectedPostSlug(state.postSlug);
+    const view = parseUrlState();
+    setCurrentView(view);
 
     const handlePopState = () => {
-      const nextState = parseUrlState();
-      setCurrentView(nextState.view);
-      setSelectedPostSlug(nextState.postSlug);
+      const nextView = parseUrlState();
+      setCurrentView(nextView);
     };
 
     window.addEventListener('popstate', handlePopState);
@@ -186,17 +151,12 @@ export default function App() {
   }, [parseUrlState]);
 
   // Navigate view and update URL history
-  const handleViewChange = (
-    view: 'dashboard' | 'admin' | 'calendar' | 'blog',
-    postSlug?: string | null
-  ) => {
+  const handleViewChange = (view: 'dashboard' | 'admin' | 'calendar') => {
     setCurrentView(view);
-    setSelectedPostSlug(postSlug || null);
 
     let targetPath = '/';
     if (view === 'admin') targetPath = '/admin';
     else if (view === 'calendar') targetPath = '/calendar';
-    else if (view === 'blog') targetPath = postSlug ? `/blog/${postSlug}` : '/blog';
 
     if (window.location.pathname !== targetPath) {
       window.history.pushState(null, '', targetPath);
@@ -206,50 +166,80 @@ export default function App() {
       updatePageSEO({
         title: 'India Macro Indicators | Official Central Economic Monitor',
         description:
-          'Official macroeconomic dashboard tracking India banking liquidity, repo rate anchors, CPI inflation, forex reserves, and GDP prints with zero dummy numbers.',
+          'Official macroeconomic dashboard tracking India banking liquidity, repo rate anchors, CPI inflation, forex reserves, and GDP prints directly from verified data feeds.',
       });
     }
   };
 
-  // Fetch metrics from backend API
+  /**
+   * Fetch metrics directly from server API or static CSV file.
+   * Guarantees that whether on backend server, local dev, or static client preview,
+   * the application displays the latest data from the CSV file.
+   */
   const fetchMetrics = useCallback(async () => {
+    setIsRefreshing(true);
     try {
-      const res = await fetch('/api/metrics');
+      // 1. Try server API endpoint (reads data/metrics.csv directly)
+      const res = await fetch(`/api/metrics?_t=${Date.now()}`);
       if (res.ok) {
         const data: MacroMetric[] = await res.json();
         if (Array.isArray(data) && data.length > 0) {
           data.sort((a, b) => (a.order || 0) - (b.order || 0));
           setMetrics(data);
+          setIsRefreshing(false);
+          return;
+        }
+      }
+
+      // 2. Direct static CSV fallback (for static hosting or preview)
+      const csvRes = await fetch(`/data/metrics.csv?_t=${Date.now()}`);
+      if (csvRes.ok) {
+        const csvText = await csvRes.text();
+        const parsed = parseMetricsCSV(csvText);
+        if (parsed.metrics && parsed.metrics.length > 0) {
+          setMetrics(parsed.metrics);
+          setIsRefreshing(false);
+          return;
+        }
+      }
+
+      // 3. Fallback to /metrics.csv
+      const rootCsvRes = await fetch(`/metrics.csv?_t=${Date.now()}`);
+      if (rootCsvRes.ok) {
+        const csvText = await rootCsvRes.text();
+        const parsed = parseMetricsCSV(csvText);
+        if (parsed.metrics && parsed.metrics.length > 0) {
+          setMetrics(parsed.metrics);
+          setIsRefreshing(false);
+          return;
         }
       }
     } catch (err) {
-      console.error('Failed to fetch metrics:', err);
+      console.warn('Network fetch failed, relying on bundled CSV data:', err);
+    } finally {
+      setIsRefreshing(false);
     }
   }, []);
 
-  // Fetch blog posts from backend API
-  const fetchPosts = useCallback(async () => {
-    try {
-      const res = await fetch('/api/posts');
-      if (res.ok) {
-        const data: BlogPost[] = await res.json();
-        if (Array.isArray(data) && data.length > 0) {
-          setPosts(data);
-        }
-      }
-    } catch (err) {
-      console.error('Failed to fetch blog posts:', err);
-    }
-  }, []);
-
+  // Initial load and periodic background sync (every 15s + when window regains focus)
   useEffect(() => {
-    const initData = async () => {
-      setLoading(true);
-      await Promise.all([fetchMetrics(), fetchPosts()]);
-      setLoading(false);
+    fetchMetrics();
+
+    const interval = setInterval(() => {
+      fetchMetrics();
+    }, 15000);
+
+    const handleFocus = () => {
+      fetchMetrics();
     };
-    initData();
-  }, [fetchMetrics, fetchPosts]);
+
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [fetchMetrics]);
 
   // Content Management: Save metric (Create or Update)
   const handleSaveMetric = async (metricData: Partial<MacroMetric>) => {
@@ -284,7 +274,7 @@ export default function App() {
 
   // Content Management: Delete metric
   const handleDeleteMetric = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this metric?')) return;
+    if (!confirm('Are you sure you want to delete this indicator?')) return;
     try {
       const res = await fetch(`/api/metrics/${id}`, { method: 'DELETE' });
       if (res.ok) {
@@ -334,7 +324,7 @@ export default function App() {
     }
   };
 
-  // Content Management: Clear all metrics (Reset to blank state)
+  // Content Management: Clear all metrics
   const handleClearAll = async () => {
     if (!confirm('Are you sure you want to clear all indicators?')) return;
     try {
@@ -359,7 +349,7 @@ export default function App() {
     }
   };
 
-  // Reset to 16 official macro indicators without numbers
+  // Reset to 16 official macro indicators
   const handleResetOfficialSpec = async () => {
     try {
       const res = await fetch('/api/metrics/reset-template', { method: 'POST' });
@@ -398,96 +388,26 @@ export default function App() {
     setIsEditorOpen(true);
   };
 
-  // ================= BLOG POST CMS ACTIONS ================= //
-
-  const handleSavePost = async (postData: Partial<BlogPost> & { id?: string }) => {
-    try {
-      if (postData.id) {
-        const res = await fetch(`/api/posts/${postData.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(postData),
-        });
-        if (res.ok) {
-          await fetchPosts();
-        }
-      } else {
-        const res = await fetch('/api/posts', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(postData),
-        });
-        if (res.ok) {
-          await fetchPosts();
-        }
-      }
-    } catch (err) {
-      console.error('Failed to save blog post:', err);
-    }
-  };
-
-  const handleDeletePost = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this article?')) return;
-    try {
-      const res = await fetch(`/api/posts/${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        await fetchPosts();
-      }
-    } catch (err) {
-      console.error('Failed to delete blog post:', err);
-    }
-  };
-
-  const handleTogglePublishPost = async (post: BlogPost) => {
-    try {
-      const res = await fetch(`/api/posts/${post.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ isPublished: !post.isPublished }),
-      });
-      if (res.ok) {
-        await fetchPosts();
-      }
-    } catch (err) {
-      console.error('Failed to toggle post publish:', err);
-    }
-  };
-
-  const handleResetPosts = async () => {
-    if (!confirm('Reset articles to the 3 standard macroeconomic research analyses?')) return;
-    try {
-      const res = await fetch('/api/posts/reset-template', { method: 'POST' });
-      if (res.ok) {
-        await fetchPosts();
-      }
-    } catch (err) {
-      console.error('Failed to reset blog posts:', err);
-    }
-  };
-
-  // Find selected post if in blog post detail view
-  const currentPost = selectedPostSlug
-    ? posts.find((p) => p.slug === selectedPostSlug || p.id === selectedPostSlug)
-    : null;
-
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
-      {/* Sticky Header with Day/Dark mode toggle at top-right & Top Navigation for Indicators and Blog */}
+      {/* Sticky Header with Day/Dark mode toggle */}
       <Header
         currentView={currentView}
         onViewChange={(view) => handleViewChange(view)}
         darkMode={darkMode}
         onToggleDarkMode={() => setDarkMode((prev) => !prev)}
         metricsCount={metrics.filter((m) => m.isPublished).length}
+        onRefreshData={fetchMetrics}
+        isRefreshing={isRefreshing}
       />
 
       {/* Main App Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16">
-        {loading && metrics.length === 0 && posts.length === 0 ? (
+        {loading && metrics.length === 0 ? (
           <div className="py-24 text-center">
             <div className="w-8 h-8 mx-auto border-2 border-slate-300 dark:border-slate-700 border-t-slate-900 dark:border-t-white rounded-full animate-spin mb-4" />
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Connecting to macroeconomic backend service...
+              Loading macroeconomic indicators from CSV...
             </p>
           </div>
         ) : currentView === 'admin' ? (
@@ -516,16 +436,8 @@ export default function App() {
               onOpenCalendar={() => handleViewChange('calendar')}
               loading={loading}
               onRefreshMetrics={fetchMetrics}
-              // Blog CMS Props
-              posts={posts}
-              onSavePost={handleSavePost}
-              onDeletePost={handleDeletePost}
-              onTogglePublishPost={handleTogglePublishPost}
-              onResetPosts={handleResetPosts}
-              // Auth & Supabase Props
               onOpenPasswordChange={() => setIsPasswordChangeModalOpen(true)}
               onLogout={handleLogout}
-              supabaseStatus={supabaseStatus}
             />
           )
         ) : currentView === 'calendar' ? (
@@ -534,26 +446,12 @@ export default function App() {
               handleSelectTemplateToCreate(tmpl);
             }}
           />
-        ) : currentView === 'blog' ? (
-          currentPost ? (
-            <BlogPostDetail
-              post={currentPost}
-              onBack={() => handleViewChange('blog')}
-              onSelectPost={(post) => handleViewChange('blog', post.slug)}
-              relatedPosts={posts.filter((p) => p.id !== currentPost.id && p.isPublished)}
-            />
-          ) : (
-            <BlogView
-              posts={posts}
-              onSelectPost={(post) => handleViewChange('blog', post.slug)}
-            />
-          )
         ) : (
           <PublicDashboard metrics={metrics} />
         )}
       </main>
 
-      {/* Search Engines & Crawler Transparency Footer */}
+      {/* Footer */}
       {currentView !== 'admin' && (
         <footer id="app-footer" className="border-t border-slate-200 dark:border-slate-800/80 bg-slate-50/70 dark:bg-slate-900/40 text-xs text-slate-500 dark:text-slate-400 py-6 mt-16 transition-colors">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -572,6 +470,16 @@ export default function App() {
               >
                 Admin Portal
               </button>
+              <span className="text-slate-300 dark:text-slate-700">•</span>
+              <a
+                href="/data/metrics.csv"
+                target="_blank"
+                download="metrics.csv"
+                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                title="Download raw metrics CSV"
+              >
+                Data Feed (CSV)
+              </a>
               <span className="text-slate-300 dark:text-slate-700">•</span>
               <a
                 href="/sitemap.xml"

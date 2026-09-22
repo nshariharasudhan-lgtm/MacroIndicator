@@ -92,28 +92,3 @@ export interface MacroCalendarTemplate {
   note?: string;
 }
 
-export interface BlogPostSEO {
-  metaTitle: string;
-  metaDescription: string;
-  keywords: string[];
-  canonicalUrl?: string;
-  ogImage?: string;
-  structuredDataType?: 'Article' | 'BlogPosting' | 'NewsArticle';
-}
-
-export interface BlogPost {
-  id: string;
-  title: string;
-  slug: string;
-  excerpt: string;
-  content: string;
-  category: string;
-  author: string;
-  readTimeMinutes: number;
-  coverImage?: string;
-  tags: string[];
-  isPublished: boolean;
-  publishedAt: string;
-  updatedAt: string;
-  seo: BlogPostSEO;
-}

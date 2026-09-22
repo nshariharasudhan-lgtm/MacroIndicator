@@ -15,13 +15,8 @@
   Real-time tracking of all active macro indicators with category filters, frequency selectors, delta changes, and target anchors.
 - **Macroeconomic Release Calendar**: `/calendar`
   Official schedules for RBI MPC decisions, CPI inflation releases, GDP quarterly prints, Index of Industrial Production (IIP), and Forex WSS announcements.
-- **Macroeconomic Research & Analysis**: `/blog`
-  Deep-dive economic research articles written by the macro research desk with quantitative models, historical context, and policy implications.
-
-## Selected Research Articles
-- `/blog/rbi-monetary-policy-repo-rate-decision`: RBI Monetary Policy Review: Repo Rate, Liquidity Stance, and Inflation Anchors.
-- `/blog/india-cpi-inflation-trajectory-food-core-dynamics`: India CPI Inflation Trajectory: Food Spikes vs Core Disinflation Dynamics.
-- `/blog/banking-liquidity-deficit-and-call-money-rate-dynamics`: Banking Liquidity Deficit: VRR Operations, Frictional Shocks, and Call Money Rates.
+- **Direct CSV Data Feed**: `/data/metrics.csv`
+  Official comma-separated dataset containing all verified Indian macroeconomic parameters.
 
 ## Official Data Verification Sources
 - Reserve Bank of India (RBI): https://www.rbi.org.in

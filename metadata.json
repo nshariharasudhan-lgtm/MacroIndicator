@@ -1,6 +1,6 @@
 {
   "name": "India Macro Dashboard",
-  "description": "MacroNest.online - Knowledge Today, A Brighter Tomorrow. A macroeconomic indicator dashboard and research blog for tracking Indian economic metrics, policy rates, and systemic market indicators.",
+  "description": "MacroNest.online - Knowledge Today, A Brighter Tomorrow. A macroeconomic indicator dashboard for tracking Indian economic metrics, policy rates, and systemic market indicators directly from official feeds.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

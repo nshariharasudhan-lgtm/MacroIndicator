@@ -1,5 +1,3 @@
-import { BlogPost, BlogPostSEO } from '../types.ts';
-
 export function updatePageSEO(seo: {
   title: string;
   description: string;
@@ -104,33 +102,3 @@ export function updatePageSEO(seo: {
   }
 }
 
-export function generatePostStructuredData(post: BlogPost, origin: string) {
-  const url = `${origin}/blog/${post.slug}`;
-  return {
-    '@context': 'https://schema.org',
-    '@type': post.seo.structuredDataType || 'BlogPosting',
-    'headline': post.seo.metaTitle || post.title,
-    'description': post.seo.metaDescription || post.excerpt,
-    'author': {
-      '@type': 'Person',
-      'name': post.author || 'India Macro Research Desk',
-    },
-    'datePublished': post.publishedAt,
-    'dateModified': post.updatedAt || post.publishedAt,
-    'mainEntityOfPage': {
-      '@type': 'WebPage',
-      '@id': url,
-    },
-    'publisher': {
-      '@type': 'Organization',
-      'name': 'India Macro Dashboard',
-      'logo': {
-        '@type': 'ImageObject',
-        'url': `${origin}/favicon.ico`,
-      },
-    },
-    'keywords': post.seo.keywords?.join(', ') || post.tags?.join(', ') || 'India Economy, Macroeconomics, RBI',
-    'articleSection': post.category,
-    'wordCount': post.content ? post.content.split(/\s+/).length : 0,
-  };
-}

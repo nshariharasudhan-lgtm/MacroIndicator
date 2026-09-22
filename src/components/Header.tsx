@@ -3,11 +3,13 @@ import { Sun, Moon, LayoutDashboard, Settings, CalendarDays } from 'lucide-react
 import { MacroNestLogo } from './MacroNestLogo.tsx';
 
 interface HeaderProps {
-  currentView: 'dashboard' | 'admin' | 'calendar' | 'blog';
-  onViewChange: (view: 'dashboard' | 'admin' | 'calendar' | 'blog') => void;
+  currentView: 'dashboard' | 'admin' | 'calendar';
+  onViewChange: (view: 'dashboard' | 'admin' | 'calendar') => void;
   darkMode: boolean;
   onToggleDarkMode: () => void;
   metricsCount: number;
+  onRefreshData?: () => void;
+  isRefreshing?: boolean;
 }
 
 export const Header: FC<HeaderProps> = ({
@@ -16,6 +18,8 @@ export const Header: FC<HeaderProps> = ({
   darkMode,
   onToggleDarkMode,
   metricsCount,
+  onRefreshData,
+  isRefreshing,
 }) => {
   return (
     <header
@@ -35,7 +39,7 @@ export const Header: FC<HeaderProps> = ({
           </button>
         </div>
 
-        {/* Center: Top Navigation for Client-Facing Views (Indicators vs Macro Blog) */}
+        {/* Center: Clean public navigation */}
         {currentView !== 'admin' && currentView !== 'calendar' ? (
           <nav id="top-public-nav" className="flex items-center gap-1 sm:gap-2">
             <button
@@ -47,23 +51,19 @@ export const Header: FC<HeaderProps> = ({
                   : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
-              <span>Indicators</span>
+              <span>Indicators ({metricsCount})</span>
             </button>
 
             <button
-              id="top-nav-blog"
-              onClick={() => onViewChange('blog')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
-                currentView === 'blog'
-                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
-              }`}
+              id="top-nav-calendar"
+              onClick={() => onViewChange('calendar')}
+              className="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer"
             >
-              <span>Insights</span>
+              <span>Release Calendar</span>
             </button>
           </nav>
         ) : (
-          /* If in Admin or Calendar mode (via URL), show clean mode indicator and back button */
+          /* If in Admin or Calendar mode, show mode label and back button */
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold px-2.5 py-1 rounded-md bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300 uppercase tracking-wider">
               {currentView === 'admin' ? 'Admin Portal' : 'Macro Calendar'}
@@ -72,13 +72,25 @@ export const Header: FC<HeaderProps> = ({
               onClick={() => onViewChange('dashboard')}
               className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer border border-slate-200 dark:border-slate-800"
             >
-              ← Back to Public Site
+              ← Back to Indicators
             </button>
           </div>
         )}
 
-        {/* Right: Day/Dark Mode Toggle on Top Right Corner */}
+        {/* Right: Actions & Day/Dark Mode Toggle */}
         <div className="flex items-center gap-2">
+          {currentView !== 'admin' && (
+            <button
+              type="button"
+              onClick={() => onViewChange('admin')}
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-colors cursor-pointer"
+              title="Open Admin to upload CSV or edit indicators"
+            >
+              <Settings className="w-3.5 h-3.5" />
+              <span>Admin</span>
+            </button>
+          )}
+
           <button
             id="theme-toggle-btn"
             type="button"

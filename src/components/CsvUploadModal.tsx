@@ -445,7 +445,7 @@ export const CsvUploadModal: FC<CsvUploadModalProps> = ({
               className="px-5 py-2 rounded-xl bg-slate-950 dark:bg-white text-white dark:text-slate-950 font-bold text-xs hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors shadow-xs flex items-center gap-1.5 disabled:opacity-50 cursor-pointer"
             >
               {uploading ? (
-                <span>Syncing Database...</span>
+                <span>Updating Indicators...</span>
               ) : (
                 <>
                   <span>Apply & Synchronize ({parsedPreview?.metrics.length || 0})</span>
