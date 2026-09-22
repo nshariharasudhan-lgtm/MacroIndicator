@@ -218,7 +218,9 @@ function authMiddleware(req: express.Request, res: express.Response, next: expre
  * Returns all indicators parsed directly from data/metrics.csv
  */
 app.get('/api/metrics', (_req, res) => {
-  res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   const metrics = getMetricsFromCSV();
   res.json(metrics);
 });
@@ -227,8 +229,10 @@ app.get('/api/metrics', (_req, res) => {
  * Direct CSV feeds for external viewers, Excel, curl, and static fallback
  */
 app.get(['/data/metrics.csv', '/metrics.csv'], (_req, res) => {
-  res.set('Content-Type', 'text/csv; charset=utf-8');
-  res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   if (fs.existsSync(CSV_FILE)) {
     return res.sendFile(CSV_FILE);
   }
@@ -653,6 +657,11 @@ app.post('/api/admin/logout', (req, res) => {
     activeSessions.delete(token);
   }
   res.json({ success: true });
+});
+
+// Explicit 404 for unhandled API routes so they NEVER return HTML SPA index
+app.all('/api/*', (_req, res) => {
+  res.status(404).json({ error: 'API route not found' });
 });
 
 // ================= VITE MIDDLEWARE & STATIC SERVING ================= //

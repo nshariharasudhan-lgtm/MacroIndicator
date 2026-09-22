@@ -42,6 +42,7 @@ interface AdminDashboardProps {
   onOpenCalendar: () => void;
   loading: boolean;
   onRefreshMetrics?: () => Promise<void> | void;
+  onBatchUpdateMetrics?: (newMetrics: MacroMetric[], rawCsv?: string) => Promise<void> | void;
   onOpenPasswordChange?: () => void;
   onLogout?: () => void;
 }
@@ -59,6 +60,7 @@ export const AdminDashboard: FC<AdminDashboardProps> = ({
   onOpenCalendar,
   loading,
   onRefreshMetrics,
+  onBatchUpdateMetrics,
   onOpenPasswordChange,
   onLogout,
 }) => {
@@ -521,8 +523,10 @@ export const AdminDashboard: FC<AdminDashboardProps> = ({
       <CsvUploadModal
         isOpen={isCsvModalOpen}
         onClose={() => setIsCsvModalOpen(false)}
-        onUploadSuccess={async () => {
-          if (onRefreshMetrics) {
+        onUploadSuccess={async (newMetrics, rawCsv) => {
+          if (newMetrics && onBatchUpdateMetrics) {
+            await onBatchUpdateMetrics(newMetrics, rawCsv);
+          } else if (onRefreshMetrics) {
             await onRefreshMetrics();
           }
         }}

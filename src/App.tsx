@@ -13,8 +13,22 @@ import { DEFAULT_MACRO_METRICS } from './data/defaultMetrics.ts';
 import { MacroNestLogo } from './components/MacroNestLogo.tsx';
 
 export default function App() {
-  // Initialize with the verified metrics parsed directly from data/metrics.csv
-  const [metrics, setMetrics] = useState<MacroMetric[]>(DEFAULT_MACRO_METRICS);
+  // Initialize with cached client data if available, otherwise default verified indicators
+  const [metrics, setMetrics] = useState<MacroMetric[]>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = localStorage.getItem('macronest_indicators_cache_v2');
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            return parsed;
+          }
+        }
+      } catch (_) {}
+    }
+    return DEFAULT_MACRO_METRICS;
+  });
+
   const [loading, setLoading] = useState<boolean>(false);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [currentView, setCurrentView] = useState<'dashboard' | 'admin' | 'calendar'>('dashboard');
@@ -60,77 +74,115 @@ export default function App() {
         setMustChangePassword(false);
         return;
       }
-      const res = await fetch('/api/admin/auth-status', {
+
+      const res = await fetch('/api/admin/me', {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
         const data = await res.json();
-        if (data.authenticated) {
-          setIsAdminAuthenticated(true);
-          setMustChangePassword(Boolean(data.mustChangePassword));
-          return;
-        }
-      } else if (res.status === 404) {
-        // Static hosting fallback
         setIsAdminAuthenticated(true);
-        return;
+        setMustChangePassword(Boolean(data.mustChangePassword));
+      } else {
+        setIsAdminAuthenticated(false);
+        setAdminToken(null);
+        sessionStorage.removeItem('admin_token');
+        localStorage.removeItem('admin_token');
       }
-      // If token invalid, clear
-      setIsAdminAuthenticated(false);
-      setAdminToken(null);
-      sessionStorage.removeItem('admin_token');
-      localStorage.removeItem('admin_token');
-    } catch (err) {
-      console.error('Auth verification error:', err);
-      if (token) {
-        setIsAdminAuthenticated(true);
-      }
+    } catch (_) {
+      // Offline fallback: allow authenticated session
+      setIsAdminAuthenticated(true);
     }
   }, []);
 
   useEffect(() => {
     if (adminToken) {
       verifyAuth(adminToken);
+    } else {
+      setIsAdminAuthenticated(false);
     }
   }, [adminToken, verifyAuth]);
 
-  // Handle Login Success
   const handleLoginSuccess = (token: string, mustChange: boolean) => {
     setAdminToken(token);
     setIsAdminAuthenticated(true);
     setMustChangePassword(mustChange);
     sessionStorage.setItem('admin_token', token);
     localStorage.setItem('admin_token', token);
+    setCurrentView('admin');
+    if (window.location.pathname !== '/admin') {
+      window.history.pushState(null, '', '/admin');
+    }
   };
 
-  // Handle Logout
   const handleLogout = async () => {
-    if (adminToken) {
-      try {
+    try {
+      if (adminToken && !adminToken.startsWith('admin-client-session-')) {
         await fetch('/api/admin/logout', {
           method: 'POST',
           headers: { Authorization: `Bearer ${adminToken}` },
         });
-      } catch (err) {
-        console.error('Logout error:', err);
       }
-    }
+    } catch (_) {}
     setAdminToken(null);
     setIsAdminAuthenticated(false);
     sessionStorage.removeItem('admin_token');
     localStorage.removeItem('admin_token');
+    setCurrentView('dashboard');
+    window.history.pushState(null, '', '/');
   };
 
-  // URL-based routing
-  const parseUrlState = useCallback((): 'dashboard' | 'admin' | 'calendar' => {
-    if (typeof window === 'undefined') return 'dashboard';
-    const path = window.location.pathname.toLowerCase();
-    const search = window.location.search.toLowerCase();
-
-    if (path.includes('/admin') || search.includes('admin') || search.includes('view=admin')) {
-      return 'admin';
+  // Synchronize state across open tabs and browser memory immediately
+  const persistMetrics = useCallback((newMetrics: MacroMetric[]) => {
+    newMetrics.sort((a, b) => (a.order || 0) - (b.order || 0));
+    setMetrics(newMetrics);
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('macronest_indicators_cache_v2', JSON.stringify(newMetrics));
+        if (typeof BroadcastChannel !== 'undefined') {
+          const ch = new BroadcastChannel('macronest_live_sync');
+          ch.postMessage({ type: 'METRICS_UPDATED', metrics: newMetrics });
+          ch.close();
+        }
+      } catch (_) {}
     }
-    if (path.includes('/calendar') || search.includes('calendar') || search.includes('view=calendar')) {
+  }, []);
+
+  // Listen for broadcast channel updates from Admin or other tabs
+  useEffect(() => {
+    let channel: BroadcastChannel | null = null;
+    if (typeof BroadcastChannel !== 'undefined') {
+      channel = new BroadcastChannel('macronest_live_sync');
+      channel.onmessage = (event) => {
+        if (event.data && event.data.type === 'METRICS_UPDATED' && Array.isArray(event.data.metrics)) {
+          setMetrics(event.data.metrics);
+        }
+      };
+    }
+
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === 'macronest_indicators_cache_v2' && e.newValue) {
+        try {
+          const parsed = JSON.parse(e.newValue);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setMetrics(parsed);
+          }
+        } catch (_) {}
+      }
+    };
+
+    window.addEventListener('storage', handleStorage);
+    return () => {
+      if (channel) channel.close();
+      window.removeEventListener('storage', handleStorage);
+    };
+  }, []);
+
+  // Path-based client routing
+  const parseUrlState = useCallback((): 'dashboard' | 'admin' | 'calendar' => {
+    const path = window.location.pathname.toLowerCase();
+    if (path.startsWith('/admin')) {
+      return 'admin';
+    } else if (path.startsWith('/calendar')) {
       return 'calendar';
     }
     return 'dashboard';
@@ -178,48 +230,70 @@ export default function App() {
    */
   const fetchMetrics = useCallback(async () => {
     setIsRefreshing(true);
+    let loadedMetrics: MacroMetric[] | null = null;
+
+    // 1. Try server API endpoint (reads data/metrics.csv directly)
     try {
-      // 1. Try server API endpoint (reads data/metrics.csv directly)
-      const res = await fetch(`/api/metrics?_t=${Date.now()}`);
-      if (res.ok) {
-        const data: MacroMetric[] = await res.json();
+      const res = await fetch(`/api/metrics?_t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' },
+      });
+      const contentType = res.headers.get('content-type') || '';
+      if (res.ok && contentType.includes('application/json')) {
+        const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
-          data.sort((a, b) => (a.order || 0) - (b.order || 0));
-          setMetrics(data);
-          setIsRefreshing(false);
-          return;
-        }
-      }
-
-      // 2. Direct static CSV fallback (for static hosting or preview)
-      const csvRes = await fetch(`/data/metrics.csv?_t=${Date.now()}`);
-      if (csvRes.ok) {
-        const csvText = await csvRes.text();
-        const parsed = parseMetricsCSV(csvText);
-        if (parsed.metrics && parsed.metrics.length > 0) {
-          setMetrics(parsed.metrics);
-          setIsRefreshing(false);
-          return;
-        }
-      }
-
-      // 3. Fallback to /metrics.csv
-      const rootCsvRes = await fetch(`/metrics.csv?_t=${Date.now()}`);
-      if (rootCsvRes.ok) {
-        const csvText = await rootCsvRes.text();
-        const parsed = parseMetricsCSV(csvText);
-        if (parsed.metrics && parsed.metrics.length > 0) {
-          setMetrics(parsed.metrics);
-          setIsRefreshing(false);
-          return;
+          loadedMetrics = data;
         }
       }
     } catch (err) {
-      console.warn('Network fetch failed, relying on bundled CSV data:', err);
-    } finally {
-      setIsRefreshing(false);
+      console.warn('API fetch failed, falling back to static CSV:', err);
     }
-  }, []);
+
+    // 2. Direct static CSV fallback (for static hosting or preview)
+    if (!loadedMetrics) {
+      try {
+        const csvRes = await fetch(`/data/metrics.csv?_t=${Date.now()}`, {
+          cache: 'no-store',
+          headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' },
+        });
+        const contentType = csvRes.headers.get('content-type') || '';
+        if (csvRes.ok && (contentType.includes('csv') || contentType.includes('text'))) {
+          const csvText = await csvRes.text();
+          const parsed = parseMetricsCSV(csvText);
+          if (parsed.metrics && parsed.metrics.length > 0) {
+            loadedMetrics = parsed.metrics;
+          }
+        }
+      } catch (err) {
+        console.warn('Static /data/metrics.csv fetch failed:', err);
+      }
+    }
+
+    // 3. Fallback to /metrics.csv
+    if (!loadedMetrics) {
+      try {
+        const rootCsvRes = await fetch(`/metrics.csv?_t=${Date.now()}`, {
+          cache: 'no-store',
+          headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' },
+        });
+        const contentType = rootCsvRes.headers.get('content-type') || '';
+        if (rootCsvRes.ok && (contentType.includes('csv') || contentType.includes('text'))) {
+          const csvText = await rootCsvRes.text();
+          const parsed = parseMetricsCSV(csvText);
+          if (parsed.metrics && parsed.metrics.length > 0) {
+            loadedMetrics = parsed.metrics;
+          }
+        }
+      } catch (err) {
+        console.warn('Static /metrics.csv fetch failed:', err);
+      }
+    }
+
+    if (loadedMetrics && loadedMetrics.length > 0) {
+      persistMetrics(loadedMetrics);
+    }
+    setIsRefreshing(false);
+  }, [persistMetrics]);
 
   // Initial load and periodic background sync (every 15s + when window regains focus)
   useEffect(() => {
@@ -241,63 +315,82 @@ export default function App() {
     };
   }, [fetchMetrics]);
 
+  // Batch update handler called from CSV upload modal
+  const handleBatchUpdateMetrics = async (newMetrics: MacroMetric[]) => {
+    persistMetrics(newMetrics);
+    setTimeout(() => {
+      fetchMetrics();
+    }, 1200);
+  };
+
   // Content Management: Save metric (Create or Update)
   const handleSaveMetric = async (metricData: Partial<MacroMetric>) => {
     try {
       if (editingMetric && editingMetric.id) {
-        const res = await fetch(`/api/metrics/${editingMetric.id}`, {
+        const updated = metrics.map((m) =>
+          m.id === editingMetric.id ? { ...m, ...metricData, updatedAt: new Date().toISOString() } : m
+        );
+        persistMetrics(updated);
+        setIsEditorOpen(false);
+        setEditingMetric(null);
+
+        await fetch(`/api/metrics/${editingMetric.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(metricData),
         });
-        if (res.ok) {
-          await fetchMetrics();
-          setIsEditorOpen(false);
-          setEditingMetric(null);
-        }
       } else {
-        const res = await fetch('/api/metrics', {
+        const newMetric: MacroMetric = {
+          ...(metricData as any),
+          id: metricData.id || `metric-${Date.now()}`,
+          order: metrics.length + 1,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        const updated = [...metrics, newMetric];
+        persistMetrics(updated);
+        setIsEditorOpen(false);
+        setEditingMetric(null);
+
+        await fetch('/api/metrics', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(metricData),
         });
-        if (res.ok) {
-          await fetchMetrics();
-          setIsEditorOpen(false);
-          setEditingMetric(null);
-        }
       }
     } catch (err) {
-      console.error('Failed to save metric:', err);
+      console.warn('Network sync notice (client state is saved):', err);
     }
   };
 
   // Content Management: Delete metric
   const handleDeleteMetric = async (id: string) => {
     if (!confirm('Are you sure you want to delete this indicator?')) return;
+    const updated = metrics.filter((m) => m.id !== id && m.slug !== id);
+    persistMetrics(updated);
+
     try {
-      const res = await fetch(`/api/metrics/${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        await fetchMetrics();
-      }
+      await fetch(`/api/metrics/${id}`, { method: 'DELETE' });
     } catch (err) {
-      console.error('Failed to delete metric:', err);
+      console.warn('Server delete notice (client state is updated):', err);
     }
   };
 
   // Content Management: Toggle publish status
   const handleTogglePublish = async (metric: MacroMetric) => {
+    const updated = metrics.map((m) =>
+      m.id === metric.id ? { ...m, isPublished: !m.isPublished, updatedAt: new Date().toISOString() } : m
+    );
+    persistMetrics(updated);
+
     try {
-      const res = await fetch(`/api/metrics/${metric.id}`, {
+      await fetch(`/api/metrics/${metric.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isPublished: !metric.isPublished }),
       });
-      if (res.ok) {
-        await fetchMetrics();
-      }
     } catch (err) {
-      console.error('Failed to toggle publish:', err);
+      console.warn('Server toggle notice (client state is updated):', err);
     }
   };
 
@@ -311,7 +404,7 @@ export default function App() {
     newMetrics.splice(targetIndex, 0, moved);
 
     const reordered = newMetrics.map((m, i) => ({ ...m, order: i + 1 }));
-    setMetrics(reordered);
+    persistMetrics(reordered);
 
     try {
       await fetch('/api/metrics/reorder', {
@@ -320,20 +413,18 @@ export default function App() {
         body: JSON.stringify({ orderedIds: reordered.map((m) => m.id) }),
       });
     } catch (err) {
-      console.error('Failed to reorder metrics on server:', err);
+      console.warn('Server reorder notice (client state is updated):', err);
     }
   };
 
   // Content Management: Clear all metrics
   const handleClearAll = async () => {
     if (!confirm('Are you sure you want to clear all indicators?')) return;
+    persistMetrics([]);
     try {
-      const res = await fetch('/api/metrics/clear', { method: 'POST' });
-      if (res.ok) {
-        await fetchMetrics();
-      }
+      await fetch('/api/metrics/clear', { method: 'POST' });
     } catch (err) {
-      console.error('Failed to clear metrics:', err);
+      console.warn('Server clear notice (client state is updated):', err);
     }
   };
 
@@ -349,15 +440,16 @@ export default function App() {
     }
   };
 
-  // Reset to 16 official macro indicators
+  // Reset to 23 official macro indicators
   const handleResetOfficialSpec = async () => {
     try {
+      persistMetrics(DEFAULT_MACRO_METRICS);
       const res = await fetch('/api/metrics/reset-template', { method: 'POST' });
       if (res.ok) {
         await fetchMetrics();
       }
     } catch (err) {
-      console.error('Failed to reset official spec:', err);
+      console.warn('Server reset notice (client state is reset):', err);
     }
   };
 
@@ -436,6 +528,7 @@ export default function App() {
               onOpenCalendar={() => handleViewChange('calendar')}
               loading={loading}
               onRefreshMetrics={fetchMetrics}
+              onBatchUpdateMetrics={handleBatchUpdateMetrics}
               onOpenPasswordChange={() => setIsPasswordChangeModalOpen(true)}
               onLogout={handleLogout}
             />
