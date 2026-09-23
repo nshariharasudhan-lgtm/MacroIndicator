@@ -61,6 +61,19 @@ export const MetricCard: FC<MetricCardProps> = ({
             MPC
           </span>
         );
+      case 'FOMC':
+        return (
+          <span className="px-2.5 py-0.5 text-[11px] font-bold uppercase rounded-md tracking-wider border border-red-200 bg-red-50 text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
+            FOMC
+          </span>
+        );
+      case 'ECB MEETING':
+      case 'ECB':
+        return (
+          <span className="px-2.5 py-0.5 text-[11px] font-bold uppercase rounded-md tracking-wider border border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-900/60 dark:bg-sky-950/40 dark:text-sky-300">
+            ECB MEETING
+          </span>
+        );
       case 'BIMONTHLY':
         return (
           <span className="px-2.5 py-0.5 text-[11px] font-bold uppercase rounded-md tracking-wider border border-teal-200 bg-teal-50 text-teal-700 dark:border-teal-900/60 dark:bg-teal-950/40 dark:text-teal-300">

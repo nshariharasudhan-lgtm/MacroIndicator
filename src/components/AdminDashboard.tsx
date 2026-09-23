@@ -25,7 +25,7 @@ import {
   Download,
   CheckCircle2,
 } from 'lucide-react';
-import { MacroMetric, Frequency, Category } from '../types.ts';
+import { MacroMetric, Frequency, Category, isGlobalIndicator } from '../types.ts';
 import { MetricCard } from './MetricCard.tsx';
 import { CsvUploadModal } from './CsvUploadModal.tsx';
 
@@ -65,6 +65,7 @@ export const AdminDashboard: FC<AdminDashboardProps> = ({
   onLogout,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedScope, setSelectedScope] = useState<'ALL' | 'DOMESTIC' | 'GLOBAL'>('ALL');
   const [selectedFrequency, setSelectedFrequency] = useState<string>('ALL');
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [viewMode, setViewMode] = useState<'table' | 'grid'>('grid');
@@ -92,8 +93,19 @@ export const AdminDashboard: FC<AdminDashboardProps> = ({
     window.open('/api/metrics/export-csv', '_blank');
   };
 
+  const domesticCount = useMemo(() => metrics.filter((m) => !isGlobalIndicator(m)).length, [metrics]);
+  const globalCount = useMemo(() => metrics.filter((m) => isGlobalIndicator(m)).length, [metrics]);
+  const publishedCount = metrics.filter((m) => m.isPublished).length;
+  const draftCount = metrics.length - publishedCount;
+
   const filteredMetrics = useMemo(() => {
     return metrics.filter((m) => {
+      const isGlobal = isGlobalIndicator(m);
+      const matchesScope =
+        selectedScope === 'ALL' ||
+        (selectedScope === 'GLOBAL' && isGlobal) ||
+        (selectedScope === 'DOMESTIC' && !isGlobal);
+
       const matchesSearch =
         (m.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
         (m.sourceName || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -105,12 +117,9 @@ export const AdminDashboard: FC<AdminDashboardProps> = ({
       const matchesCat =
         selectedCategory === 'ALL' || m.category === selectedCategory;
 
-      return matchesSearch && matchesFreq && matchesCat;
+      return matchesScope && matchesSearch && matchesFreq && matchesCat;
     });
-  }, [metrics, searchQuery, selectedFrequency, selectedCategory]);
-
-  const publishedCount = metrics.filter((m) => m.isPublished).length;
-  const draftCount = metrics.length - publishedCount;
+  }, [metrics, selectedScope, searchQuery, selectedFrequency, selectedCategory]);
 
   return (
     <div id="admin-cms-dashboard" className="space-y-6 animate-fade-in pb-16">
@@ -227,8 +236,12 @@ export const AdminDashboard: FC<AdminDashboardProps> = ({
 
         {/* Quick Specimen / Reset Controls */}
         <div className="mt-4 pt-4 border-t border-slate-200/80 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
-          <div className="flex items-center gap-3 text-slate-500 dark:text-slate-400 font-mono text-[11px]">
+          <div className="flex items-center gap-2.5 text-slate-500 dark:text-slate-400 font-mono text-[11px] flex-wrap">
             <span>Total: <strong>{metrics.length}</strong></span>
+            <span>•</span>
+            <span>🇮🇳 Domestic: <strong>{domesticCount}</strong></span>
+            <span>•</span>
+            <span>🌐 Global: <strong>{globalCount}</strong></span>
             <span>•</span>
             <span className="text-emerald-600 dark:text-emerald-400">Live: <strong>{publishedCount}</strong></span>
             <span>•</span>
@@ -250,11 +263,11 @@ export const AdminDashboard: FC<AdminDashboardProps> = ({
               <button
                 type="button"
                 onClick={onResetOfficialSpec}
-                title="Resets to 16 official macro indicators"
+                title="Resets to official macro indicators specification"
                 className="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer flex items-center gap-1.5"
               >
                 <Layers className="w-3 h-3 text-blue-500" />
-                <span>Reset to 16 Official</span>
+                <span>Reset to Official CSV</span>
               </button>
             )}
 
@@ -275,16 +288,54 @@ export const AdminDashboard: FC<AdminDashboardProps> = ({
 
       {/* Filter & View Controls */}
       <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
-        {/* Search */}
-        <div className="relative w-full md:w-72">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search indicators, sources, anchors..."
-            className="w-full pl-9 pr-4 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400"
-          />
+        {/* Scope Switcher and Search */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full md:w-auto">
+          <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg">
+            <button
+              type="button"
+              onClick={() => setSelectedScope('ALL')}
+              className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer ${
+                selectedScope === 'ALL'
+                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              All ({metrics.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedScope('DOMESTIC')}
+              className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer ${
+                selectedScope === 'DOMESTIC'
+                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              🇮🇳 Domestic ({domesticCount})
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedScope('GLOBAL')}
+              className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer ${
+                selectedScope === 'GLOBAL'
+                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              🌐 Global ({globalCount})
+            </button>
+          </div>
+
+          <div className="relative w-full sm:w-60">
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search indicators, sources..."
+              className="w-full pl-9 pr-4 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400"
+            />
+          </div>
         </div>
 
         {/* Dropdowns & View Mode */}
@@ -300,6 +351,9 @@ export const AdminDashboard: FC<AdminDashboardProps> = ({
             <option value="WEEKLY">Weekly</option>
             <option value="FORTNIGHTLY">Fortnightly</option>
             <option value="MONTHLY">Monthly</option>
+            <option value="MPC">MPC</option>
+            <option value="FOMC">FOMC</option>
+            <option value="ECB MEETING">ECB Meeting</option>
             <option value="BIMONTHLY">Bimonthly</option>
             <option value="QUARTERLY">Quarterly</option>
           </select>
@@ -311,14 +365,15 @@ export const AdminDashboard: FC<AdminDashboardProps> = ({
             className="text-xs px-2.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400"
           >
             <option value="ALL">All Categories</option>
+            <option value="GLOBAL">GLOBAL (International)</option>
             <option value="REAL ECONOMY">Real Economy</option>
             <option value="INFLATION">Inflation</option>
             <option value="MONETARY">Monetary</option>
             <option value="EXTERNAL">External</option>
             <option value="FISCAL">Fiscal</option>
             <option value="MARKETS">Markets</option>
-            <option value="INDUSTRY">Industry</option>
             <option value="EMPLOYMENT">Employment</option>
+            <option value="INDUSTRY">Industry</option>
           </select>
 
           {/* Grid vs Table toggle */}

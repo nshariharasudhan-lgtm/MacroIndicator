@@ -19,7 +19,32 @@ export type Category =
   | 'EMPLOYMENT'
   | 'INDUSTRY'
   | 'COMMODITIES'
+  | 'GLOBAL'
   | string;
+
+/**
+ * Determines whether an indicator belongs to the Global section or Domestic (India) section.
+ * Flags category 'GLOBAL' or known global indicator slugs/prefixes.
+ */
+export function isGlobalIndicator(metric: Partial<MacroMetric> | undefined | null): boolean {
+  if (!metric) return false;
+  if ((metric.category || '').toUpperCase() === 'GLOBAL') return true;
+  const slug = (metric.slug || metric.id || '').toLowerCase();
+  if (
+    slug.startsWith('us-') ||
+    slug.startsWith('china-') ||
+    slug.startsWith('ecb-') ||
+    slug.startsWith('fed-') ||
+    slug.startsWith('global-') ||
+    slug === 'brent-crude' ||
+    slug === 'gold-price' ||
+    slug === 'us-dollar-index' ||
+    slug === 'dollar-index'
+  ) {
+    return true;
+  }
+  return false;
+}
 
 export type MetricStatus =
   | 'Expansion'

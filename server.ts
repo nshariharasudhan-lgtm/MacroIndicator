@@ -768,6 +768,9 @@ async function startServer() {
   } else {
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
+    app.get(['/global', '/global/*'], (_req, res) => {
+      res.sendFile(path.join(distPath, 'global/index.html'));
+    });
     app.get(['/calendar', '/calendar/*'], (_req, res) => {
       res.sendFile(path.join(distPath, 'calendar/index.html'));
     });

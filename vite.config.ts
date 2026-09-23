@@ -18,6 +18,7 @@ export default defineConfig(() => {
       rollupOptions: {
         input: {
           main: path.resolve(currentDir, 'index.html'),
+          global: path.resolve(currentDir, 'global/index.html'),
           calendar: path.resolve(currentDir, 'calendar/index.html'),
           calculator: path.resolve(currentDir, 'calculator/index.html'),
           admin: path.resolve(currentDir, 'admin/index.html'),

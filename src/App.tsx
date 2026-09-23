@@ -8,7 +8,7 @@ import { AdminPasswordChangeModal } from './components/AdminPasswordChangeModal.
 import { MacroCalendarView } from './components/MacroCalendarView.tsx';
 import { RepoRateCalculator } from './components/RepoRateCalculator.tsx';
 import { MetricEditorModal } from './components/MetricEditorModal.tsx';
-import { MacroMetric } from './types.ts';
+import { MacroMetric, isGlobalIndicator } from './types.ts';
 import { updatePageSEO } from './utils/seo.ts';
 import { parseMetricsCSV } from './utils/csvParser.ts';
 import { DEFAULT_MACRO_METRICS } from './data/defaultMetrics.ts';
@@ -19,7 +19,7 @@ export default function App() {
   const [metrics, setMetrics] = useState<MacroMetric[]>(() => {
     if (typeof window !== 'undefined') {
       try {
-        const cached = localStorage.getItem('macronest_indicators_cache_v3');
+        const cached = localStorage.getItem('macronest_indicators_cache_v4');
         if (cached) {
           const parsed = JSON.parse(cached);
           if (Array.isArray(parsed) && parsed.length > 0) {
@@ -33,10 +33,11 @@ export default function App() {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'admin' | 'calendar' | 'calculator'>(() => {
+  const [currentView, setCurrentView] = useState<'dashboard' | 'global' | 'admin' | 'calendar' | 'calculator'>(() => {
     if (typeof window !== 'undefined') {
       const path = window.location.pathname.toLowerCase();
       if (path.startsWith('/admin')) return 'admin';
+      if (path.startsWith('/global')) return 'global';
       if (path.startsWith('/calendar')) return 'calendar';
       if (path.startsWith('/calculator')) return 'calculator';
     }
@@ -188,10 +189,12 @@ export default function App() {
   }, []);
 
   // Path-based client routing
-  const parseUrlState = useCallback((): 'dashboard' | 'admin' | 'calendar' | 'calculator' => {
+  const parseUrlState = useCallback((): 'dashboard' | 'global' | 'admin' | 'calendar' | 'calculator' => {
     const path = window.location.pathname.toLowerCase();
     if (path.startsWith('/admin')) {
       return 'admin';
+    } else if (path.startsWith('/global')) {
+      return 'global';
     } else if (path.startsWith('/calendar')) {
       return 'calendar';
     } else if (path.startsWith('/calculator')) {
@@ -222,6 +225,14 @@ export default function App() {
         description:
           'MacroNest.online - Knowledge Today, A Brighter Tomorrow. Track Indian macroeconomic indicators, RBI repo rate anchors, banking system liquidity, CPI inflation, forex reserves, and GDP prints directly from official statutory feeds.',
         canonicalUrl: 'https://macronest.online/',
+        robots: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+      });
+    } else if (currentView === 'global') {
+      updatePageSEO({
+        title: 'Global Macroeconomic Indicators & Rates | MacroNest.online',
+        description:
+          'Track US Federal Reserve policy rates, US CPI inflation, nonfarm payrolls, 10Y US Treasury yields, Dollar Index (DXY), Brent crude, gold, ECB rate decisions, and China PMI.',
+        canonicalUrl: 'https://macronest.online/global',
         robots: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
       });
     } else if (currentView === 'calendar') {
@@ -276,11 +287,12 @@ export default function App() {
   }, [currentView]);
 
   // Navigate view and update URL history
-  const handleViewChange = (view: 'dashboard' | 'admin' | 'calendar' | 'calculator') => {
+  const handleViewChange = (view: 'dashboard' | 'global' | 'admin' | 'calendar' | 'calculator') => {
     setCurrentView(view);
 
     let targetPath = '/';
-    if (view === 'admin') targetPath = '/admin';
+    if (view === 'global') targetPath = '/global';
+    else if (view === 'admin') targetPath = '/admin';
     else if (view === 'calendar') targetPath = '/calendar';
     else if (view === 'calculator') targetPath = '/calculator';
 
@@ -516,6 +528,9 @@ export default function App() {
     }
   };
 
+  const domesticPublishedCount = metrics.filter((m) => m.isPublished && !isGlobalIndicator(m)).length;
+  const globalPublishedCount = metrics.filter((m) => m.isPublished && isGlobalIndicator(m)).length;
+
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
       {/* Sticky Header with Day/Dark mode toggle */}
@@ -524,7 +539,8 @@ export default function App() {
         onViewChange={(view) => handleViewChange(view)}
         darkMode={darkMode}
         onToggleDarkMode={() => setDarkMode((prev) => !prev)}
-        metricsCount={metrics.filter((m) => m.isPublished).length}
+        metricsCount={domesticPublishedCount}
+        globalMetricsCount={globalPublishedCount}
         onRefreshData={fetchMetrics}
         isRefreshing={isRefreshing}
       />
@@ -579,6 +595,8 @@ export default function App() {
         ) : (
           <PublicDashboard
             metrics={metrics}
+            activeTab={currentView === 'global' ? 'global' : 'domestic'}
+            onTabChange={(tab) => handleViewChange(tab === 'global' ? 'global' : 'dashboard')}
             onOpenCalculator={() => handleViewChange('calculator')}
           />
         )}

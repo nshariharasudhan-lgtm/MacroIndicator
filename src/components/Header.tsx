@@ -1,13 +1,14 @@
 import { FC } from 'react';
-import { Sun, Moon } from 'lucide-react';
+import { Sun, Moon, Globe } from 'lucide-react';
 import { MacroNestLogo } from './MacroNestLogo.tsx';
 
 interface HeaderProps {
-  currentView: 'dashboard' | 'admin' | 'calendar' | 'calculator';
-  onViewChange: (view: 'dashboard' | 'admin' | 'calendar' | 'calculator') => void;
+  currentView: 'dashboard' | 'global' | 'admin' | 'calendar' | 'calculator';
+  onViewChange: (view: 'dashboard' | 'global' | 'admin' | 'calendar' | 'calculator') => void;
   darkMode: boolean;
   onToggleDarkMode: () => void;
   metricsCount: number;
+  globalMetricsCount?: number;
   onRefreshData?: () => void;
   isRefreshing?: boolean;
 }
@@ -18,6 +19,7 @@ export const Header: FC<HeaderProps> = ({
   darkMode,
   onToggleDarkMode,
   metricsCount,
+  globalMetricsCount = 0,
 }) => {
   return (
     <header
@@ -43,13 +45,26 @@ export const Header: FC<HeaderProps> = ({
             <button
               id="top-nav-indicators"
               onClick={() => onViewChange('dashboard')}
-              className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                 currentView === 'dashboard'
                   ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
-              <span>Indicators ({metricsCount})</span>
+              <span>Domestic ({metricsCount})</span>
+            </button>
+
+            <button
+              id="top-nav-global"
+              onClick={() => onViewChange('global')}
+              className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                currentView === 'global'
+                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+              }`}
+            >
+              <Globe className="w-3.5 h-3.5" />
+              <span>Global Indicators ({globalMetricsCount})</span>
             </button>
 
             <button

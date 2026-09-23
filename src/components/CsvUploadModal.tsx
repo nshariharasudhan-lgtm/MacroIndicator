@@ -11,7 +11,7 @@ import {
   Database,
   Sparkles,
 } from 'lucide-react';
-import { MacroMetric } from '../types.ts';
+import { MacroMetric, isGlobalIndicator } from '../types.ts';
 import { parseMetricsCSV } from '../utils/csvParser.ts';
 
 interface CsvUploadModalProps {
@@ -49,9 +49,11 @@ export const CsvUploadModal: FC<CsvUploadModalProps> = ({
     const result = parseMetricsCSV(text);
     setParsedPreview(result);
     if (result.metrics.length > 0) {
+      const globalCount = result.metrics.filter(isGlobalIndicator).length;
+      const domesticCount = result.metrics.length - globalCount;
       setStatusMessage({
         type: 'info',
-        text: `Parsed ${result.metrics.length} indicators from ${fileName || 'CSV'}. Review the preview below before applying.`,
+        text: `Parsed ${result.metrics.length} indicators (${domesticCount} Domestic, ${globalCount} Global) from ${fileName || 'CSV'}. Domestic cards will appear in Domestic Indicators and Global cards will appear in Global Indicators. Review before applying.`,
       });
     } else {
       setStatusMessage({
@@ -402,6 +404,7 @@ export const CsvUploadModal: FC<CsvUploadModalProps> = ({
                   <thead className="sticky top-0 bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 text-[11px] uppercase tracking-wider font-semibold">
                     <tr>
                       <th className="p-2.5">#</th>
+                      <th className="p-2.5">Section</th>
                       <th className="p-2.5">Indicator Title</th>
                       <th className="p-2.5">Category</th>
                       <th className="p-2.5">Freq</th>
@@ -412,35 +415,49 @@ export const CsvUploadModal: FC<CsvUploadModalProps> = ({
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
-                    {parsedPreview.metrics.map((m, idx) => (
-                      <tr key={m.id || idx} className="hover:bg-slate-100/60 dark:hover:bg-slate-900/60">
-                        <td className="p-2.5 font-mono text-slate-400">{idx + 1}</td>
-                        <td className="p-2.5 font-bold text-slate-900 dark:text-white">
-                          {m.title}
-                          <div className="text-[10px] font-mono text-slate-400">{m.slug || m.id}</div>
-                        </td>
-                        <td className="p-2.5 text-slate-600 dark:text-slate-400">{m.category}</td>
-                        <td className="p-2.5 font-semibold text-slate-700 dark:text-slate-300">{m.frequency}</td>
-                        <td className="p-2.5 font-extrabold text-slate-950 dark:text-white">
-                          {m.value} {m.unit}
-                        </td>
-                        <td className="p-2.5 text-slate-600 dark:text-slate-300">{m.deltaDisplay || m.deltaValue || '—'}</td>
-                        <td className="p-2.5 text-slate-600 dark:text-slate-300 truncate max-w-[140px]" title={m.stanceState}>
-                          {m.stanceState || '—'}
-                        </td>
-                        <td className="p-2.5">
-                          {m.isPublished ? (
-                            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
-                              Published
-                            </span>
-                          ) : (
-                            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">
-                              Draft
-                            </span>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
+                    {parsedPreview.metrics.map((m, idx) => {
+                      const isGlobal = isGlobalIndicator(m);
+                      return (
+                        <tr key={m.id || idx} className="hover:bg-slate-100/60 dark:hover:bg-slate-900/60">
+                          <td className="p-2.5 font-mono text-slate-400">{idx + 1}</td>
+                          <td className="p-2.5">
+                            {isGlobal ? (
+                              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300">
+                                🌐 Global
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300">
+                                🇮🇳 Domestic
+                              </span>
+                            )}
+                          </td>
+                          <td className="p-2.5 font-bold text-slate-900 dark:text-white">
+                            {m.title}
+                            <div className="text-[10px] font-mono text-slate-400">{m.slug || m.id}</div>
+                          </td>
+                          <td className="p-2.5 text-slate-600 dark:text-slate-400">{m.category}</td>
+                          <td className="p-2.5 font-semibold text-slate-700 dark:text-slate-300">{m.frequency}</td>
+                          <td className="p-2.5 font-extrabold text-slate-950 dark:text-white">
+                            {m.value} {m.unit}
+                          </td>
+                          <td className="p-2.5 text-slate-600 dark:text-slate-300">{m.deltaDisplay || m.deltaValue || '—'}</td>
+                          <td className="p-2.5 text-slate-600 dark:text-slate-300 truncate max-w-[140px]" title={m.stanceState}>
+                            {m.stanceState || '—'}
+                          </td>
+                          <td className="p-2.5">
+                            {m.isPublished ? (
+                              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                                Published
+                              </span>
+                            ) : (
+                              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">
+                                Draft
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

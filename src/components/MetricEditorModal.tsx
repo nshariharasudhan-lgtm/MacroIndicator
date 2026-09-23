@@ -273,8 +273,10 @@ export const MetricEditorModal: FC<MetricEditorModalProps> = ({
                 <option value="INFLATION">INFLATION</option>
                 <option value="REAL ECONOMY">REAL ECONOMY</option>
                 <option value="FISCAL">FISCAL</option>
+                <option value="EMPLOYMENT">EMPLOYMENT</option>
                 <option value="INDUSTRY">INDUSTRY</option>
                 <option value="COMMODITIES">COMMODITIES</option>
+                <option value="GLOBAL">GLOBAL (International)</option>
               </select>
             </div>
           </div>
@@ -293,7 +295,11 @@ export const MetricEditorModal: FC<MetricEditorModalProps> = ({
               >
                 <option value="DAILY">DAILY (Blue pill)</option>
                 <option value="WEEKLY">WEEKLY (Purple pill)</option>
+                <option value="FORTNIGHTLY">FORTNIGHTLY (Fuchsia pill)</option>
                 <option value="MONTHLY">MONTHLY (Amber pill)</option>
+                <option value="MPC">MPC (Rose pill)</option>
+                <option value="FOMC">FOMC (Red pill)</option>
+                <option value="ECB MEETING">ECB MEETING (Sky pill)</option>
                 <option value="BIMONTHLY">BIMONTHLY (Teal pill)</option>
                 <option value="QUARTERLY">QUARTERLY (Indigo pill)</option>
                 <option value="HALF-YEARLY">HALF-YEARLY (Slate pill)</option>

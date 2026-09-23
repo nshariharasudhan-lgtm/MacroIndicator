@@ -3,7 +3,7 @@ import { MacroMetric } from '../types.ts';
 /**
  * Default Macroeconomic Indicators parsed directly from data/metrics.csv.
  * Guarantees that the client-facing site immediately displays the full set of
- * verified Indian macro indicators with real data, even before network calls.
+ * verified Indian and Global macro indicators with real data, even before network calls.
  */
 export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
   {
@@ -37,8 +37,8 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
     "researchNotes": "Aug 2026 provisional; July 2026 now final at 4.45%. Food inflation (CFPI) 5.95%. Next release date stated in the press note itself.",
     "isPublished": true,
     "order": 1,
-    "createdAt": "2026-09-23T03:56:03.774Z",
-    "updatedAt": "2026-09-23T03:56:03.774Z"
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
   },
   {
     "id": "wpi-inflation",
@@ -71,8 +71,8 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
     "researchNotes": "Fuel and Power inflation 22.93% (from 20.05%) is the main driver. All-commodities index 110.8 vs 110.0.",
     "isPublished": true,
     "order": 2,
-    "createdAt": "2026-09-23T03:56:03.774Z",
-    "updatedAt": "2026-09-23T03:56:03.774Z"
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
   },
   {
     "id": "gst-collections",
@@ -105,8 +105,8 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
     "researchNotes": "previous_value is the year-ago comparable (Aug 2025), not July 2026, because GST is reported on a YoY basis. Aug 2025 was REVISED DOWN from Rs 1.86 lakh crore to Rs 1.74 lakh crore. Net GST Aug 2026 = Rs 1,68,057 crore (+8.3% YoY).",
     "isPublished": true,
     "order": 3,
-    "createdAt": "2026-09-23T03:56:03.774Z",
-    "updatedAt": "2026-09-23T03:56:03.774Z"
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
   },
   {
     "id": "pmi-manufacturing",
@@ -139,8 +139,8 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
     "researchNotes": "Privately compiled (S&P Global/HSBC), not government data. Final 52.8, weakest since Aug 2021; some aggregators still show the 52.9 flash estimate. Official release page is paywalled/indexed only at spglobal PMI hub. HSBC flash PMI for September scheduled for release on 23 Sep 2026 (not yet out at run time); final due 1 Oct / 5 Oct.",
     "isPublished": true,
     "order": 4,
-    "createdAt": "2026-09-23T03:56:03.774Z",
-    "updatedAt": "2026-09-23T03:56:03.774Z"
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
   },
   {
     "id": "pmi-services",
@@ -173,8 +173,8 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
     "researchNotes": "Privately compiled. Final 54.1, revised down from 54.5 flash. Could not open the S&P Global press release directly; value cross-checked across multiple reports. HSBC flash PMI for September scheduled for release on 23 Sep 2026 (not yet out at run time); final due 1 Oct / 5 Oct.",
     "isPublished": true,
     "order": 5,
-    "createdAt": "2026-09-23T03:56:03.774Z",
-    "updatedAt": "2026-09-23T03:56:03.774Z"
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
   },
   {
     "id": "merchandise-trade-deficit",
@@ -207,8 +207,8 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
     "researchNotes": "Exports $43.18 bn (+26.12% YoY), imports $72.67 bn (+14.1% YoY). Commerce Ministry press release PDF not retrievable; figures cross-checked against Reuters and Commerce Secretary briefing. Note tradestat portal landing page still shows FY2025-26 as latest dataset.",
     "isPublished": true,
     "order": 6,
-    "createdAt": "2026-09-23T03:56:03.774Z",
-    "updatedAt": "2026-09-23T03:56:03.774Z"
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
   },
   {
     "id": "iip-growth",
@@ -241,8 +241,8 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
     "researchNotes": "Quick Estimate. June 2026 was REVISED UP from 7.3% (quick estimate) to 8.8%; delta uses the revised June figure. Mining contracted 0.9%. Next release date from MoSPI Advance Release Calendar 2026-27 (IIP for Aug 2026 on 28 Sep).",
     "isPublished": true,
     "order": 7,
-    "createdAt": "2026-09-23T03:56:03.774Z",
-    "updatedAt": "2026-09-23T03:56:03.774Z"
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
   },
   {
     "id": "core-sector-output",
@@ -275,8 +275,8 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
     "researchNotes": "Aug 2026 provisional; index 119.2. July 2026 final revised DOWN to 5.0% (index 120.8) from 5.4% provisional; delta uses revised July. Growth in cement 12.5%, electricity 11.6%, iron ore 5.5%, steel 3.4%, refinery products 2.6%; contraction in coal -3.8%, natural gas -4.9%, crude oil -3.6%, fertilizers -12.4%. Apr-Aug cumulative 4.3%. Title updated to reflect the nine-industry series. Next release date stated in the press note.",
     "isPublished": false,
     "order": 8,
-    "createdAt": "2026-09-23T03:56:03.774Z",
-    "updatedAt": "2026-09-23T03:56:03.774Z"
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
   },
   {
     "id": "foreign-exchange-reserves",
@@ -309,8 +309,8 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
     "researchNotes": "Small decline from the all-time high of $785.706 bn (week ended 4 Sep), which itself was a record $44.9 bn weekly jump. FCA fell $2.372 bn to $645.796 bn. RBI WSS viewer is JS-gated and could not be read directly; figures cross-checked against CNBC-TV18, ET BFSI and Trading Economics reporting of the same RBI release.",
     "isPublished": true,
     "order": 9,
-    "createdAt": "2026-09-23T03:56:03.774Z",
-    "updatedAt": "2026-09-23T03:56:03.774Z"
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
   },
   {
     "id": "money-supply-m3",
@@ -343,8 +343,8 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
     "researchNotes": "Jump from 14.2% to 16.7% in one fortnight is unusually large — verify against the RBI WSS Table 4 before publishing. M3 outstanding around Rs 3.32 crore crore (Rs 332 lakh crore). RBI WSS could not be opened directly.",
     "isPublished": false,
     "order": 10,
-    "createdAt": "2026-09-23T03:56:03.774Z",
-    "updatedAt": "2026-09-23T03:56:03.774Z"
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
   },
   {
     "id": "bank-credit-growth",
@@ -377,8 +377,8 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
     "researchNotes": "Conflict resolved: 19.1% refers to the fortnight ended 31 Aug (not 4 Sep). Outstanding ~₹223.9 lakh crore; credit rose ~₹3.8 trillion in the fortnight. Previous 18.3% at 15 Aug (Mint rounds it to 18%). Cross-checked across Business Standard, Mint and Deccan Chronicle. Data for 15 Sep fortnight due this week. RBI WSS not read directly.",
     "isPublished": false,
     "order": 11,
-    "createdAt": "2026-09-23T03:56:03.774Z",
-    "updatedAt": "2026-09-23T03:56:03.774Z"
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
   },
   {
     "id": "bank-deposit-growth",
@@ -411,8 +411,8 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
     "researchNotes": "Conflict resolved: 17.8% refers to the fortnight ended 31 Aug. Outstanding ~₹278.7 lakh crore; deposits rose ~₹9.4-9.5 trillion in the fortnight, driven by FCNR(B) inflows before RBI's concessional swap window closed on 31 Aug. Previous 14.7% at 15 Aug. Cross-checked across Business Standard, Rediff and Mint. RBI WSS not read directly.",
     "isPublished": false,
     "order": 12,
-    "createdAt": "2026-09-23T03:56:03.774Z",
-    "updatedAt": "2026-09-23T03:56:03.774Z"
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
   },
   {
     "id": "repo-rate",
@@ -445,8 +445,8 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
     "researchNotes": "Unanimous 6-0 hold; fourth consecutive pause. SDF 5.00%, MSF and Bank Rate 5.50%, stance neutral. Next MPC scheduled 5-7 Oct 2026 with the resolution on 7 Oct. RBI press release listing page returns stale cached content; verify the resolution URL before publishing.",
     "isPublished": true,
     "order": 13,
-    "createdAt": "2026-09-23T03:56:03.774Z",
-    "updatedAt": "2026-09-23T03:56:03.774Z"
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
   },
   {
     "id": "gdp-growth",
@@ -479,8 +479,8 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
     "researchNotes": "previous_value is the year-ago quarter growth rate (Q1 FY2025-26 = 6.9%), the economically appropriate comparison for a YoY growth series, not the sequential quarter. Real GVA +8.2%, nominal GDP +10.3%, real GDP Rs 81.36 lakh crore. Beat RBI's 7.0% projection.",
     "isPublished": true,
     "order": 14,
-    "createdAt": "2026-09-23T03:56:03.774Z",
-    "updatedAt": "2026-09-23T03:56:03.774Z"
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
   },
   {
     "id": "current-account-deficit",
@@ -513,8 +513,8 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
     "researchNotes": "CAD $4.2 bn (0.5% of GDP) vs $3.4 bn (0.4%, revised) a year earlier; merchandise trade deficit widened to $86.1 bn from $68.9 bn. One secondary outlet reported $3.1 bn for the same quarter — treated as erroneous since Reuters, PTI and ANI all quote the RBI release at $4.2 bn. RBI press release listing page returned stale cache; link the specific BoP release when available.",
     "isPublished": true,
     "order": 15,
-    "createdAt": "2026-09-23T03:56:03.774Z",
-    "updatedAt": "2026-09-23T03:56:03.774Z"
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
   },
   {
     "id": "usd-inr-reference-rate",
@@ -547,8 +547,8 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
     "researchNotes": "22 Sep 2026 reference rate 95.8179 (GBP 128.1223, EUR 109.8252, JPY100 60.79); 21 Sep 95.7991; 18 Sep 95.7910. Delta now available. Interbank spot closed stronger at ~95.58 provisional on 22 Sep, so the reference rate (fixed ~1:30 PM) and close diverge. Row was previously held back only for the missing delta — ready to review for publish.",
     "isPublished": false,
     "order": 16,
-    "createdAt": "2026-09-23T03:56:03.774Z",
-    "updatedAt": "2026-09-23T03:56:03.774Z"
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
   },
   {
     "id": "gsec-10y-yield",
@@ -581,8 +581,8 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
     "researchNotes": "Market close 22 Sep 7.016% vs 7.054% on 21 Sep (Investing.com); Trading Economics shows 7.04% (-0.03) for the same day, so size of the fall differs slightly between sources. Up ~56 bps YoY. Official FBIL par yield file not read directly — confirm before publishing.",
     "isPublished": false,
     "order": 17,
-    "createdAt": "2026-09-23T03:56:03.774Z",
-    "updatedAt": "2026-09-23T03:56:03.774Z"
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
   },
   {
     "id": "nifty-50",
@@ -615,8 +615,8 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
     "researchNotes": "Weekly F&O expiry day; indicative price dipped ~1% intraday before recovering. 21 Sep close 23414.30 (+67.90). NSE site bot-gated; cross-checked against Moneycontrol, Economic Times and Business Standard.",
     "isPublished": true,
     "order": 18,
-    "createdAt": "2026-09-23T03:56:03.774Z",
-    "updatedAt": "2026-09-23T03:56:03.774Z"
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
   },
   {
     "id": "sensex",
@@ -649,8 +649,8 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
     "researchNotes": "21 Sep close 74858.99 (+564.03) after six weekly declines; gave back 330 pts on 22 Sep. Cross-checked across Business Standard and Economic Times.",
     "isPublished": true,
     "order": 19,
-    "createdAt": "2026-09-23T03:56:03.774Z",
-    "updatedAt": "2026-09-23T03:56:03.774Z"
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
   },
   {
     "id": "india-vix",
@@ -683,8 +683,8 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
     "researchNotes": "Falling volatility is read as economically positive, hence badge 'positive' despite trend_direction 'down'. Day range 10.62-11.41; 52-week range 8.72-28.91. NSE page bot-gated; cross-checked against Upstox and Anand Rathi.",
     "isPublished": true,
     "order": 20,
-    "createdAt": "2026-09-23T03:56:03.774Z",
-    "updatedAt": "2026-09-23T03:56:03.774Z"
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
   },
   {
     "id": "fpi-net-flows",
@@ -717,8 +717,8 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
     "researchNotes": "Now populated from NSDL-based PTI weekly summary (The Hindu, Times of India, NDTV Profit): equity MTD -₹20,974 crore to 18 Sep vs -₹13,138 crore a week earlier. Debt also negative (FAR -₹10,296 cr, VRR -₹1,817 cr). CY2026 equity outflow ~₹2.45 lakh crore. Exchange provisional FII cash data since then: -₹576 cr (21 Sep), -₹3,810 cr (22 Sep). Still one syndicated source and NSDL page not read directly — verify before publishing.",
     "isPublished": false,
     "order": 21,
-    "createdAt": "2026-09-23T03:56:03.774Z",
-    "updatedAt": "2026-09-23T03:56:03.774Z"
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
   },
   {
     "id": "unemployment-rate",
@@ -751,8 +751,8 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
     "researchNotes": "Rural UR 4.1% (lowest since Jan 2026), urban UR 6.8% (up from 6.7%). LFPR rose to 55.6% from 55.4%, WPR to 52.8% from 52.5%. Next release date from MoSPI Advance Release Calendar 2026-27.",
     "isPublished": true,
     "order": 22,
-    "createdAt": "2026-09-23T03:56:03.774Z",
-    "updatedAt": "2026-09-23T03:56:03.774Z"
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
   },
   {
     "id": "essential-commodity-prices",
@@ -785,7 +785,347 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = [
     "researchNotes": "LEFT BLANK DELIBERATELY. This is a multi-commodity dashboard with no single headline number; MacroNest needs to decide which item or composite to track (e.g. all-India modal price of tomato/onion/pulses) before it can be populated. DCA portal is dynamic and was not machine-readable in this run.",
     "isPublished": false,
     "order": 23,
-    "createdAt": "2026-09-23T03:56:03.774Z",
-    "updatedAt": "2026-09-23T03:56:03.774Z"
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
+  },
+  {
+    "id": "us-fed-funds-rate",
+    "slug": "us-fed-funds-rate",
+    "title": "US Federal Funds Rate",
+    "category": "GLOBAL",
+    "frequency": "FOMC",
+    "status": "Hawkish",
+    "stanceState": "Tightening resumed, one more hike signalled",
+    "value": "4.00",
+    "unit": "% (upper bound; range 3.75-4.00)",
+    "previousValue": "3.75",
+    "deltaValue": "0.25",
+    "deltaDisplay": "+0.25 pp (hike)",
+    "deltaType": "warning",
+    "trendDirection": "up",
+    "trendBadgeStyle": "warning",
+    "targetAnchor": "Fed inflation target: 2% (PCE)",
+    "summary": "The US Federal Reserve's policy rate range. It drives global dollar liquidity, US bond yields and foreign portfolio flows into emerging markets like India.",
+    "narrativeCommentary": "The US Federal Reserve's policy rate range. It drives global dollar liquidity, US bond yields and foreign portfolio flows into emerging markets like India.",
+    "sourceName": "Federal Reserve — FOMC Statement",
+    "sourceUrl": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916a.htm",
+    "observationPeriod": "FOMC meeting, 15-16 Sep 2026",
+    "releaseDate": "2026-09-16",
+    "releaseWindow": "After each FOMC meeting (8 per year, ~11:30 PM IST)",
+    "typicalReleaseWindow": "After each FOMC meeting (8 per year, ~11:30 PM IST)",
+    "nextExpectedRelease": "2026-10-28",
+    "dataStatus": "final",
+    "verificationStatus": "verified_official",
+    "researchNotes": "Unanimous 12-0 vote to raise by 25 bps to 3.75-4.00%, first hike since 2023; projections point to possibly one more hike this year (CNBC). Next FOMC 27-28 Oct, decision 28 Oct (Fed calendar). Hike cited as a driver of September FPI selling from India.",
+    "isPublished": true,
+    "order": 24,
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
+  },
+  {
+    "id": "us-cpi-inflation",
+    "slug": "us-cpi-inflation",
+    "title": "US CPI Inflation",
+    "category": "GLOBAL",
+    "frequency": "MONTHLY",
+    "status": "Sticky, energy-driven",
+    "stanceState": "Sticky, energy-driven",
+    "value": "3.4",
+    "unit": "% y-o-y",
+    "previousValue": "3.4",
+    "deltaValue": "0.0",
+    "deltaDisplay": "0.0 pp MoM (unchanged)",
+    "deltaType": "warning",
+    "trendDirection": "flat",
+    "trendBadgeStyle": "warning",
+    "targetAnchor": "Fed inflation target: 2% (PCE)",
+    "summary": "Year-on-year change in US consumer prices (CPI-U). The key input into Federal Reserve rate decisions and global rate expectations.",
+    "narrativeCommentary": "Year-on-year change in US consumer prices (CPI-U). The key input into Federal Reserve rate decisions and global rate expectations.",
+    "sourceName": "US Bureau of Labor Statistics — CPI News Release",
+    "sourceUrl": "https://www.bls.gov/news.release/cpi.nr0.htm",
+    "observationPeriod": "August 2026",
+    "releaseDate": "2026-09-11",
+    "releaseWindow": "Mid-month (~6:00 PM IST)",
+    "typicalReleaseWindow": "Mid-month (~6:00 PM IST)",
+    "nextExpectedRelease": "2026-10-14",
+    "dataStatus": "final",
+    "verificationStatus": "verified_official",
+    "researchNotes": "Headline +0.4% MoM SA (July +0.1%). Core CPI 2.4% YoY (from 2.5%), +0.3% MoM. September CPI scheduled 14 Oct 2026, 8:30 AM ET.",
+    "isPublished": true,
+    "order": 25,
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
+  },
+  {
+    "id": "us-nonfarm-payrolls",
+    "slug": "us-nonfarm-payrolls",
+    "title": "US Nonfarm Payrolls",
+    "category": "GLOBAL",
+    "frequency": "MONTHLY",
+    "status": "Hiring rebound, well above forecast",
+    "stanceState": "Hiring rebound, well above forecast",
+    "value": "162",
+    "unit": "thousand jobs MoM",
+    "previousValue": "21",
+    "deltaValue": "141",
+    "deltaDisplay": "+141k vs prior month's gain",
+    "deltaType": "positive",
+    "trendDirection": "up",
+    "trendBadgeStyle": "positive",
+    "targetAnchor": "MacroNest anchor: 100k+/month = solid hiring",
+    "summary": "Monthly change in US non-farm employment, the headline read on the strength of the world's largest economy.",
+    "narrativeCommentary": "Monthly change in US non-farm employment, the headline read on the strength of the world's largest economy.",
+    "sourceName": "US Bureau of Labor Statistics — Employment Situation",
+    "sourceUrl": "https://www.bls.gov/news.release/empsit.nr0.htm",
+    "observationPeriod": "August 2026",
+    "releaseDate": "2026-09-04",
+    "releaseWindow": "First Friday of month (~6:00 PM IST)",
+    "typicalReleaseWindow": "First Friday of month (~6:00 PM IST)",
+    "nextExpectedRelease": "2026-10-02",
+    "dataStatus": "provisional",
+    "verificationStatus": "verified_official",
+    "researchNotes": "Consensus was ~53-56k. July revised up from -23k to +21k; previous_value uses revised July. Subject to revision in the next two reports.",
+    "isPublished": true,
+    "order": 26,
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
+  },
+  {
+    "id": "us-unemployment-rate",
+    "slug": "us-unemployment-rate",
+    "title": "US Unemployment Rate",
+    "category": "GLOBAL",
+    "frequency": "MONTHLY",
+    "status": "Stable labour market",
+    "stanceState": "Stable labour market",
+    "value": "4.1",
+    "unit": "%",
+    "previousValue": "4.1",
+    "deltaValue": "0.0",
+    "deltaDisplay": "0.0 pp MoM (unchanged)",
+    "deltaType": "neutral",
+    "trendDirection": "flat",
+    "trendBadgeStyle": "neutral",
+    "targetAnchor": "Fed longer-run estimate: ~4%",
+    "summary": "Share of the US labour force that is unemployed (U-3). Together with inflation, it frames the Federal Reserve's dual mandate.",
+    "narrativeCommentary": "Share of the US labour force that is unemployed (U-3). Together with inflation, it frames the Federal Reserve's dual mandate.",
+    "sourceName": "US Bureau of Labor Statistics — Employment Situation",
+    "sourceUrl": "https://www.bls.gov/news.release/empsit.nr0.htm",
+    "observationPeriod": "August 2026",
+    "releaseDate": "2026-09-04",
+    "releaseWindow": "First Friday of month (~6:00 PM IST)",
+    "typicalReleaseWindow": "First Friday of month (~6:00 PM IST)",
+    "nextExpectedRelease": "2026-10-02",
+    "dataStatus": "final",
+    "verificationStatus": "verified_official",
+    "researchNotes": "Unemployed persons ~7.0 million, little changed over the year.",
+    "isPublished": true,
+    "order": 27,
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
+  },
+  {
+    "id": "us-10y-treasury-yield",
+    "slug": "us-10y-treasury-yield",
+    "title": "US 10-Year Treasury Yield",
+    "category": "GLOBAL",
+    "frequency": "DAILY",
+    "status": "Caution",
+    "stanceState": "Elevated near 5%",
+    "value": "4.96",
+    "unit": "%",
+    "previousValue": "5.01",
+    "deltaValue": "-0.05",
+    "deltaDisplay": "-0.05 pp DoD",
+    "deltaType": "neutral",
+    "trendDirection": "down",
+    "trendBadgeStyle": "neutral",
+    "targetAnchor": "No official target",
+    "summary": "Yield on the benchmark 10-year US government bond, the global reference for long-term borrowing costs. Higher US yields tend to pull money out of emerging markets.",
+    "narrativeCommentary": "Yield on the benchmark 10-year US government bond, the global reference for long-term borrowing costs. Higher US yields tend to pull money out of emerging markets.",
+    "sourceName": "Federal Reserve — H.15 Selected Interest Rates",
+    "sourceUrl": "https://www.federalreserve.gov/releases/h15/",
+    "observationPeriod": "2026-09-21",
+    "releaseDate": "2026-09-22",
+    "releaseWindow": "Business days (Fed H.15, next day)",
+    "typicalReleaseWindow": "Business days (Fed H.15, next day)",
+    "nextExpectedRelease": "Expected: 2026-09-23",
+    "dataStatus": "final",
+    "verificationStatus": "verified_official",
+    "researchNotes": "Constant-maturity series; 18 Sep 5.01%, 21 Sep 4.96%. Intraday 22 Sep market quotes ~4.93% (WSJ/Trading Economics) — official 22 Sep print due 23 Sep. ~0.8 pp higher than a year ago.",
+    "isPublished": true,
+    "order": 28,
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
+  },
+  {
+    "id": "us-dollar-index",
+    "slug": "us-dollar-index",
+    "title": "US Dollar Index (DXY)",
+    "category": "GLOBAL",
+    "frequency": "DAILY",
+    "status": "Firm dollar",
+    "stanceState": "Firm dollar",
+    "value": "100.54",
+    "unit": "index",
+    "previousValue": "100.43",
+    "deltaValue": "0.11",
+    "deltaDisplay": "+0.11% DoD",
+    "deltaType": "warning",
+    "trendDirection": "up",
+    "trendBadgeStyle": "warning",
+    "targetAnchor": "No official target",
+    "summary": "Value of the US dollar against a basket of six major currencies. A stronger dollar typically weighs on the rupee and emerging-market assets.",
+    "narrativeCommentary": "Value of the US dollar against a basket of six major currencies. A stronger dollar typically weighs on the rupee and emerging-market assets.",
+    "sourceName": "ICE US Dollar Index (via Barron's)",
+    "sourceUrl": "https://www.barrons.com/market-data/indexes/dxy",
+    "observationPeriod": "2026-09-22",
+    "releaseDate": "2026-09-22",
+    "releaseWindow": "Trading days (ICE futures close)",
+    "typicalReleaseWindow": "Trading days (ICE futures close)",
+    "nextExpectedRelease": "Expected: 2026-09-23",
+    "dataStatus": "final",
+    "verificationStatus": "cross_checked",
+    "researchNotes": "Cross-checked against Investing.com (22 Sep close 100.54, +0.11%). Up ~1.4% over the past month. Badge 'warning' reflects pressure on the rupee.",
+    "isPublished": true,
+    "order": 29,
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
+  },
+  {
+    "id": "brent-crude",
+    "slug": "brent-crude",
+    "title": "Brent Crude Oil",
+    "category": "GLOBAL",
+    "frequency": "DAILY",
+    "status": "Caution",
+    "stanceState": "Elevated, easing from mid-Sep highs",
+    "value": "98.73",
+    "unit": "$ per barrel",
+    "previousValue": "100.34",
+    "deltaValue": "-1.61",
+    "deltaDisplay": "-1.6% DoD",
+    "deltaType": "positive",
+    "trendDirection": "down",
+    "trendBadgeStyle": "positive",
+    "targetAnchor": "MacroNest anchor: below $90/bbl eases India's import bill",
+    "summary": "Price of the global benchmark crude oil. India imports most of its oil, so Brent directly affects inflation, the trade deficit and the rupee.",
+    "narrativeCommentary": "Price of the global benchmark crude oil. India imports most of its oil, so Brent directly affects inflation, the trade deficit and the rupee.",
+    "sourceName": "ICE Brent futures (via FT Markets Data)",
+    "sourceUrl": "https://markets.ft.com/data/commodities/tearsheet/historical?c=Brent+Crude+Oil",
+    "observationPeriod": "2026-09-22",
+    "releaseDate": "2026-09-22",
+    "releaseWindow": "Trading days (ICE futures close)",
+    "typicalReleaseWindow": "Trading days (ICE futures close)",
+    "nextExpectedRelease": "Expected: 2026-09-23",
+    "dataStatus": "final",
+    "verificationStatus": "cross_checked",
+    "researchNotes": "Falling from 108.75 on 15 Sep on hopes of US-Iran talks. Intraday range 97.43-102.30 on 22 Sep; late-session quotes differ by source (Trading Economics ~98.6-101.8), so settlement vs close timing matters. Badge 'positive' because lower oil helps India.",
+    "isPublished": true,
+    "order": 30,
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
+  },
+  {
+    "id": "gold-price",
+    "slug": "gold-price",
+    "title": "Gold (Spot)",
+    "category": "GLOBAL",
+    "frequency": "DAILY",
+    "status": "Consolidating below highs",
+    "stanceState": "Consolidating below highs",
+    "value": "4322.82",
+    "unit": "$ per troy ounce",
+    "previousValue": "4342.83",
+    "deltaValue": "-20.01",
+    "deltaDisplay": "-0.46% DoD",
+    "deltaType": "neutral",
+    "trendDirection": "down",
+    "trendBadgeStyle": "neutral",
+    "targetAnchor": "No official target",
+    "summary": "International spot gold price. A safe-haven asset and a large item in India's import bill and household savings.",
+    "narrativeCommentary": "International spot gold price. A safe-haven asset and a large item in India's import bill and household savings.",
+    "sourceName": "PriceGold.net (spot, daily)",
+    "sourceUrl": "https://pricegold.net/2026/september/",
+    "observationPeriod": "2026-09-22",
+    "releaseDate": "2026-09-22",
+    "releaseWindow": "Trading days (LBMA PM fix ~8:30 PM IST)",
+    "typicalReleaseWindow": "Trading days (LBMA PM fix ~8:30 PM IST)",
+    "nextExpectedRelease": "Expected: 2026-09-23",
+    "dataStatus": "provisional",
+    "verificationStatus": "needs_review",
+    "researchNotes": "Spot quotes for 22 Sep differ across sources ($4,317-$4,362); LBMA PM fix (the official benchmark) is licensed and not readable. Last week LBMA PM ended at ~$4,348 (Scrapmonster). Take the LBMA PM fix before publishing.",
+    "isPublished": false,
+    "order": 31,
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
+  },
+  {
+    "id": "ecb-deposit-rate",
+    "slug": "ecb-deposit-rate",
+    "title": "ECB Deposit Facility Rate",
+    "category": "GLOBAL",
+    "frequency": "ECB MEETING",
+    "status": "Tightening on energy-driven inflation",
+    "stanceState": "Tightening on energy-driven inflation",
+    "value": "2.50",
+    "unit": "%",
+    "previousValue": "2.25",
+    "deltaValue": "0.25",
+    "deltaDisplay": "+0.25 pp (hike)",
+    "deltaType": "warning",
+    "trendDirection": "up",
+    "trendBadgeStyle": "warning",
+    "targetAnchor": "ECB inflation target: 2%",
+    "summary": "The European Central Bank's main policy rate for the euro area, the second-largest bloc of global monetary policy after the Fed.",
+    "narrativeCommentary": "The European Central Bank's main policy rate for the euro area, the second-largest bloc of global monetary policy after the Fed.",
+    "sourceName": "European Central Bank — Monetary Policy Decisions",
+    "sourceUrl": "https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.mp260910~314e508016.en.html",
+    "observationPeriod": "Governing Council meeting, 10 Sep 2026",
+    "releaseDate": "2026-09-10",
+    "releaseWindow": "After each ECB Governing Council meeting (~5:45 PM IST)",
+    "typicalReleaseWindow": "After each ECB Governing Council meeting (~5:45 PM IST)",
+    "nextExpectedRelease": "2026-10-29",
+    "dataStatus": "final",
+    "verificationStatus": "verified_official",
+    "researchNotes": "All three key rates raised 25 bps: deposit 2.50%, MRO 2.65%, MLF 2.90%, effective 16 Sep 2026. Next monetary policy meeting 28-29 Oct (ECB calendar).",
+    "isPublished": true,
+    "order": 32,
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
+  },
+  {
+    "id": "china-manufacturing-pmi",
+    "slug": "china-manufacturing-pmi",
+    "title": "China Official Manufacturing PMI",
+    "category": "GLOBAL",
+    "frequency": "MONTHLY",
+    "status": "Contraction",
+    "stanceState": "Contraction easing",
+    "value": "49.8",
+    "unit": "index",
+    "previousValue": "49.2",
+    "deltaValue": "0.6",
+    "deltaDisplay": "+0.6 index pts MoM",
+    "deltaType": "neutral",
+    "trendDirection": "up",
+    "trendBadgeStyle": "neutral",
+    "targetAnchor": "50 = no change threshold",
+    "summary": "National Bureau of Statistics survey of Chinese factory activity. A read on demand in the world's second-largest economy and on global commodity prices.",
+    "narrativeCommentary": "National Bureau of Statistics survey of Chinese factory activity. A read on demand in the world's second-largest economy and on global commodity prices.",
+    "sourceName": "National Bureau of Statistics of China — PMI Release",
+    "sourceUrl": "https://www.stats.gov.cn/english/PressRelease/202609/t20260901_1965170.html",
+    "observationPeriod": "August 2026",
+    "releaseDate": "2026-08-31",
+    "releaseWindow": "Last day of month (~7:00 AM IST)",
+    "typicalReleaseWindow": "Last day of month (~7:00 AM IST)",
+    "nextExpectedRelease": "2026-09-30",
+    "dataStatus": "final",
+    "verificationStatus": "verified_official",
+    "researchNotes": "Still below 50 but improving; output (50.4) and new orders (50.6) returned to expansion. Large enterprises 50.6. Next release 30 Sep 2026.",
+    "isPublished": true,
+    "order": 33,
+    "createdAt": "2026-09-23T08:17:51.328Z",
+    "updatedAt": "2026-09-23T08:17:51.328Z"
   }
 ];
