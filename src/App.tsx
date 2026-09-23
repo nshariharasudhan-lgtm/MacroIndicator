@@ -19,7 +19,7 @@ export default function App() {
   const [metrics, setMetrics] = useState<MacroMetric[]>(() => {
     if (typeof window !== 'undefined') {
       try {
-        const cached = localStorage.getItem('macronest_indicators_cache_v2');
+        const cached = localStorage.getItem('macronest_indicators_cache_v3');
         if (cached) {
           const parsed = JSON.parse(cached);
           if (Array.isArray(parsed) && parsed.length > 0) {
@@ -147,7 +147,7 @@ export default function App() {
     setMetrics(newMetrics);
     if (typeof window !== 'undefined') {
       try {
-        localStorage.setItem('macronest_indicators_cache_v2', JSON.stringify(newMetrics));
+        localStorage.setItem('macronest_indicators_cache_v3', JSON.stringify(newMetrics));
         if (typeof BroadcastChannel !== 'undefined') {
           const ch = new BroadcastChannel('macronest_live_sync');
           ch.postMessage({ type: 'METRICS_UPDATED', metrics: newMetrics });
@@ -170,7 +170,7 @@ export default function App() {
     }
 
     const handleStorage = (e: StorageEvent) => {
-      if (e.key === 'macronest_indicators_cache_v2' && e.newValue) {
+      if (e.key === 'macronest_indicators_cache_v3' && e.newValue) {
         try {
           const parsed = JSON.parse(e.newValue);
           if (Array.isArray(parsed) && parsed.length > 0) {
@@ -384,9 +384,6 @@ export default function App() {
   // Batch update handler called from CSV upload modal
   const handleBatchUpdateMetrics = async (newMetrics: MacroMetric[]) => {
     persistMetrics(newMetrics);
-    setTimeout(() => {
-      fetchMetrics();
-    }, 1200);
   };
 
   // Content Management: Save metric (Create or Update)

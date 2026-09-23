@@ -1,4 +1,4 @@
-import { MacroMetric, DeltaType, Frequency, Category, MetricStatus } from '../types.ts';
+import type { MacroMetric, DeltaType, Frequency, Category, MetricStatus } from '../types.ts';
 
 /**
  * Robust RFC 4180 compliant CSV parser that handles commas, quotes,

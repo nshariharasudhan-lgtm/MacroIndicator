@@ -137,8 +137,8 @@ export const CsvUploadModal: FC<CsvUploadModalProps> = ({
 
       // 2. Persist locally to browser immediately
       try {
-        localStorage.setItem('macronest_indicators_cache_v2', JSON.stringify(parsed.metrics));
-        localStorage.setItem('macronest_raw_csv_v2', fileContent);
+        localStorage.setItem('macronest_indicators_cache_v3', JSON.stringify(parsed.metrics));
+        localStorage.setItem('macronest_raw_csv_v3', fileContent);
         if (typeof BroadcastChannel !== 'undefined') {
           const ch = new BroadcastChannel('macronest_live_sync');
           ch.postMessage({ type: 'METRICS_UPDATED', metrics: parsed.metrics });
