@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Lock } from 'lucide-react';
 import { Header } from './components/Header.tsx';
 import { PublicDashboard } from './components/PublicDashboard.tsx';
 import { AdminDashboard } from './components/AdminDashboard.tsx';
@@ -667,19 +666,6 @@ export default function App() {
                 title="AI Search & LLM Context File (llms.txt standard)"
               >
                 AI Search Spec (llms.txt)
-              </a>
-              <span className="text-slate-300 dark:text-slate-700">•</span>
-              <a
-                href="/admin"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleViewChange('admin');
-                }}
-                className="hover:text-amber-600 dark:hover:text-amber-400 text-slate-400 dark:text-slate-500 transition-colors flex items-center gap-1 font-mono text-[11px]"
-                title="MacroNest Administration Console"
-              >
-                <Lock className="w-3 h-3 inline" />
-                <span>Admin</span>
               </a>
             </div>
           </div>
