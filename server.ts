@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import { createServer as createViteServer } from 'vite';
 import { MacroMetric } from './src/types.ts';
 import { parseMetricsCSV, exportMetricsToCSV } from './src/utils/csvParser.ts';
+import { DEFAULT_MACRO_METRICS } from './src/data/defaultMetrics.ts';
 import sitemapHandler from './api/sitemap.ts';
 import insightSsrHandler from './api/insight-ssr.ts';
 
@@ -511,6 +512,18 @@ app.post('/api/metrics/reorder', authMiddleware, (req, res) => {
 
     saveMetricsToDisk(reordered);
     res.json({ success: true, metrics: reordered });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/**
+ * Admin: POST /api/metrics/populate-sample (Reset to verified sample)
+ */
+app.post('/api/metrics/populate-sample', authMiddleware, (_req, res) => {
+  try {
+    saveMetricsToDisk(DEFAULT_MACRO_METRICS);
+    res.json({ success: true, metrics: DEFAULT_MACRO_METRICS });
   } catch (err: any) {
     res.status(500).json({ error: err.message });
   }

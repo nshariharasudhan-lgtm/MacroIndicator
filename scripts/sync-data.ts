@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 import { parseMetricsCSV } from '../src/utils/csvParser.ts';
-import { UPCOMING_MACRO_RELEASES } from '../src/data/upcomingReleases.ts';
 
 const CSV_FILE = path.join(process.cwd(), 'data', 'metrics.csv');
+const JSON_FILE = path.join(process.cwd(), 'data', 'metrics.json');
 const DEFAULT_METRICS_TS = path.join(process.cwd(), 'src', 'data', 'defaultMetrics.ts');
 
 if (!fs.existsSync(CSV_FILE)) {
@@ -14,19 +14,21 @@ if (!fs.existsSync(CSV_FILE)) {
 const csvText = fs.readFileSync(CSV_FILE, 'utf-8');
 const parsed = parseMetricsCSV(csvText);
 
-// Filter only published rows
-const published = parsed.metrics.filter((m) => m.isPublished);
+// Filter published rows (or those where isPublished is not explicitly false)
+const published = parsed.metrics.filter((m) => m.isPublished !== false);
 
-// Sanitize: never expose internal columns to client
+// Sanitize: exclude internal notes for client default metrics
 const sanitizedMetrics = published.map((m) => {
   const {
     researchNotes,
     verificationStatus,
     dataStatus,
-    isPublished,
     ...publicFields
   } = m;
-  return publicFields;
+  return {
+    ...publicFields,
+    isPublished: true,
+  };
 });
 
 // Update src/data/defaultMetrics.ts
@@ -38,4 +40,6 @@ export const DEFAULT_MACRO_METRICS: MacroMetric[] = ${JSON.stringify(sanitizedMe
 `;
 
 fs.writeFileSync(DEFAULT_METRICS_TS, tsContent, 'utf-8');
-console.log(`Synchronized ${sanitizedMetrics.length} published metrics to ${DEFAULT_METRICS_TS}`);
+fs.writeFileSync(JSON_FILE, JSON.stringify(parsed.metrics, null, 2), 'utf-8');
+
+console.log(`Synchronized ${sanitizedMetrics.length} published metrics to ${DEFAULT_METRICS_TS} and ${JSON_FILE}`);
