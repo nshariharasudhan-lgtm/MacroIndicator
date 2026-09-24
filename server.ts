@@ -751,6 +751,27 @@ app.post('/api/admin/logout', (req, res) => {
   res.json({ success: true });
 });
 
+/**
+ * GET /api/insights/status
+ * Check if Supabase environment variables are configured on the host
+ */
+app.get('/api/insights/status', (_req, res) => {
+  const url = (process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || '').trim();
+  const key = (process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '').trim();
+  const isConfigured = Boolean(
+    url &&
+    key &&
+    url.startsWith('https://') &&
+    !url.includes('your-project.supabase.co') &&
+    !key.includes('your-anon-key')
+  );
+
+  res.json({
+    configured: isConfigured,
+    url: isConfigured ? `${url.substring(0, 18)}...` : null,
+  });
+});
+
 // Explicit 404 for unhandled API routes so they NEVER return HTML SPA index
 app.all('/api/*', (_req, res) => {
   res.status(404).json({ error: 'API route not found' });
@@ -776,6 +797,9 @@ async function startServer() {
     });
     app.get(['/calculator', '/calculator/*'], (_req, res) => {
       res.sendFile(path.join(distPath, 'calculator/index.html'));
+    });
+    app.get(['/insights', '/insights/*'], (_req, res) => {
+      res.sendFile(path.join(distPath, 'insights/index.html'));
     });
     app.get(['/admin', '/admin/*'], (_req, res) => {
       res.sendFile(path.join(distPath, 'admin/index.html'));

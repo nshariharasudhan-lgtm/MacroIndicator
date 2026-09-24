@@ -41,6 +41,20 @@
       ]
     },
     {
+      "source": "/insights",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" },
+        { "key": "Content-Type", "value": "text/html; charset=utf-8" }
+      ]
+    },
+    {
+      "source": "/insights/:path*",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" },
+        { "key": "Content-Type", "value": "text/html; charset=utf-8" }
+      ]
+    },
+    {
       "source": "/calculator",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" },
@@ -83,6 +97,26 @@
     {
       "source": "/calendar/:path*",
       "destination": "/calendar/index.html"
+    },
+    {
+      "source": "/insights",
+      "destination": "/insights/index.html"
+    },
+    {
+      "source": "/insights/",
+      "destination": "/insights/index.html"
+    },
+    {
+      "source": "/insights/:path*",
+      "destination": "/insights/index.html"
+    },
+    {
+      "source": "/global",
+      "destination": "/global/index.html"
+    },
+    {
+      "source": "/global/",
+      "destination": "/global/index.html"
     },
     {
       "source": "/calculator",

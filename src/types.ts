@@ -117,3 +117,38 @@ export interface MacroCalendarTemplate {
   note?: string;
 }
 
+export interface InsightPost {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  category: string;
+  tags: string[];
+  coverImageUrl?: string;
+  authorName: string;
+  authorRole?: string;
+  readingTimeMinutes: number;
+  isPublished: boolean;
+  metaTitle?: string;
+  metaDescription?: string;
+  focusKeyword?: string;
+  canonicalUrl?: string;
+  viewsCount?: number;
+  publishedAt: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const INSIGHT_CATEGORIES = [
+  'Monetary Policy',
+  'Inflation & CPI',
+  'Forex & External',
+  'Fiscal & GST',
+  'Growth & GDP',
+  'Banking & Liquidity',
+  'Markets & Yields',
+  'Global Benchmarks',
+  'Macro Explainer',
+] as const;
+

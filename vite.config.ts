@@ -21,6 +21,7 @@ export default defineConfig(() => {
           global: path.resolve(currentDir, 'global/index.html'),
           calendar: path.resolve(currentDir, 'calendar/index.html'),
           calculator: path.resolve(currentDir, 'calculator/index.html'),
+          insights: path.resolve(currentDir, 'insights/index.html'),
           admin: path.resolve(currentDir, 'admin/index.html'),
         },
       },

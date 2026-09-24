@@ -1,10 +1,10 @@
 import { FC } from 'react';
-import { Sun, Moon, Globe } from 'lucide-react';
+import { Sun, Moon, Globe, BookOpen } from 'lucide-react';
 import { MacroNestLogo } from './MacroNestLogo.tsx';
 
 interface HeaderProps {
-  currentView: 'dashboard' | 'global' | 'admin' | 'calendar' | 'calculator';
-  onViewChange: (view: 'dashboard' | 'global' | 'admin' | 'calendar' | 'calculator') => void;
+  currentView: 'dashboard' | 'global' | 'admin' | 'calendar' | 'calculator' | 'insights';
+  onViewChange: (view: 'dashboard' | 'global' | 'admin' | 'calendar' | 'calculator' | 'insights') => void;
   darkMode: boolean;
   onToggleDarkMode: () => void;
   metricsCount: number;
@@ -65,6 +65,19 @@ export const Header: FC<HeaderProps> = ({
             >
               <Globe className="w-3.5 h-3.5 text-sky-500" />
               <span>Global Indicators ({globalMetricsCount})</span>
+            </button>
+
+            <button
+              id="top-nav-insights"
+              onClick={() => onViewChange('insights')}
+              className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                currentView === 'insights'
+                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs'
+                  : 'text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+              }`}
+            >
+              <BookOpen className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+              <span>Insights</span>
             </button>
 
             <button

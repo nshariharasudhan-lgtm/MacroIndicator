@@ -14,6 +14,7 @@ const AdminLogin = lazy(() => import('./components/AdminLogin.tsx').then(m => ({
 const AdminPasswordChangeModal = lazy(() => import('./components/AdminPasswordChangeModal.tsx').then(m => ({ default: m.AdminPasswordChangeModal })));
 const MacroCalendarView = lazy(() => import('./components/MacroCalendarView.tsx').then(m => ({ default: m.MacroCalendarView })));
 const RepoRateCalculator = lazy(() => import('./components/RepoRateCalculator.tsx').then(m => ({ default: m.RepoRateCalculator })));
+const InsightsView = lazy(() => import('./components/InsightsView.tsx').then(m => ({ default: m.InsightsView })));
 const MetricEditorModal = lazy(() => import('./components/MetricEditorModal.tsx').then(m => ({ default: m.MetricEditorModal })));
 
 export default function App() {
@@ -35,15 +36,23 @@ export default function App() {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'global' | 'admin' | 'calendar' | 'calculator'>(() => {
+  const [currentView, setCurrentView] = useState<'dashboard' | 'global' | 'admin' | 'calendar' | 'calculator' | 'insights'>(() => {
     if (typeof window !== 'undefined') {
       const path = window.location.pathname.toLowerCase();
       if (path.startsWith('/admin')) return 'admin';
       if (path.startsWith('/global')) return 'global';
       if (path.startsWith('/calendar')) return 'calendar';
       if (path.startsWith('/calculator')) return 'calculator';
+      if (path.startsWith('/insights')) return 'insights';
     }
     return 'dashboard';
+  });
+  const [initialInsightSlug, setInitialInsightSlug] = useState<string | undefined>(() => {
+    if (typeof window !== 'undefined') {
+      const match = window.location.pathname.match(/^\/insights\/([a-zA-Z0-9_-]+)/);
+      if (match) return match[1];
+    }
+    return undefined;
   });
   const [isEditorOpen, setIsEditorOpen] = useState<boolean>(false);
   const [editingMetric, setEditingMetric] = useState<MacroMetric | null>(null);
@@ -191,7 +200,7 @@ export default function App() {
   }, []);
 
   // Path-based client routing
-  const parseUrlState = useCallback((): 'dashboard' | 'global' | 'admin' | 'calendar' | 'calculator' => {
+  const parseUrlState = useCallback((): 'dashboard' | 'global' | 'admin' | 'calendar' | 'calculator' | 'insights' => {
     const path = window.location.pathname.toLowerCase();
     if (path.startsWith('/admin')) {
       return 'admin';
@@ -201,6 +210,8 @@ export default function App() {
       return 'calendar';
     } else if (path.startsWith('/calculator')) {
       return 'calculator';
+    } else if (path.startsWith('/insights')) {
+      return 'insights';
     }
     return 'dashboard';
   }, []);
@@ -213,6 +224,10 @@ export default function App() {
     const handlePopState = () => {
       const nextView = parseUrlState();
       setCurrentView(nextView);
+      const match = window.location.pathname.match(/^\/insights\/([a-zA-Z0-9_-]+)/);
+      if (match) {
+        setInitialInsightSlug(match[1]);
+      }
     };
 
     window.addEventListener('popstate', handlePopState);
@@ -269,6 +284,21 @@ export default function App() {
           url: 'https://macronest.online/calculator',
         },
       });
+    } else if (currentView === 'insights') {
+      updatePageSEO({
+        title: 'Macroeconomic Insights & Policy Briefings | MacroNest.online',
+        description:
+          'Authoritative macroeconomic research, RBI monetary policy commentary, inflation dynamics, GST buoyancy, and fiscal trajectory analysis by MacroNest.',
+        canonicalUrl: 'https://macronest.online/insights',
+        robots: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+        structuredData: {
+          '@context': 'https://schema.org',
+          '@type': 'Blog',
+          name: 'MacroNest Insights',
+          description: 'Macroeconomic policy analysis and Indian economic intelligence.',
+          url: 'https://macronest.online/insights',
+        },
+      });
     } else if (currentView === 'admin') {
       updatePageSEO({
         title: 'Admin Portal | MacroNest.online',
@@ -289,7 +319,7 @@ export default function App() {
   }, [currentView]);
 
   // Navigate view and update URL history
-  const handleViewChange = (view: 'dashboard' | 'global' | 'admin' | 'calendar' | 'calculator') => {
+  const handleViewChange = (view: 'dashboard' | 'global' | 'admin' | 'calendar' | 'calculator' | 'insights') => {
     setCurrentView(view);
 
     let targetPath = '/';
@@ -297,6 +327,7 @@ export default function App() {
     else if (view === 'admin') targetPath = '/admin';
     else if (view === 'calendar') targetPath = '/calendar';
     else if (view === 'calculator') targetPath = '/calculator';
+    else if (view === 'insights') targetPath = '/insights';
 
     if (window.location.pathname !== targetPath) {
       window.history.pushState(null, '', targetPath);
@@ -605,6 +636,11 @@ export default function App() {
                 metrics={metrics}
                 onNavigateHome={() => handleViewChange('dashboard')}
               />
+            ) : currentView === 'insights' ? (
+              <InsightsView
+                initialSlug={initialInsightSlug}
+                onNavigateHome={() => handleViewChange('dashboard')}
+              />
             ) : (
               <PublicDashboard
                 metrics={metrics}
@@ -628,6 +664,14 @@ export default function App() {
             </div>
 
             <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs">
+              <button
+                onClick={() => handleViewChange('insights')}
+                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-semibold text-slate-700 dark:text-slate-300 cursor-pointer"
+                title="Macroeconomic Insights & Research Briefings"
+              >
+                Insights
+              </button>
+              <span className="text-slate-400 dark:text-slate-600">•</span>
               <button
                 onClick={() => handleViewChange('calculator')}
                 className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-semibold text-slate-700 dark:text-slate-300 cursor-pointer"
