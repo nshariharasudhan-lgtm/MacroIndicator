@@ -27,14 +27,23 @@ export const RepoRateCalculator: React.FC<RepoRateCalculatorProps> = ({
   metrics = [],
   onNavigateHome,
 }) => {
-  // Extract live repo rate from metrics if available, fallback to 6.50
+  // Extract live repo rate from metrics if available, fallback to 5.25
   const liveRepoMetric = metrics.find(
     (m) =>
       m.id?.toLowerCase().includes('repo') ||
       m.title?.toLowerCase().includes('repo rate') ||
       m.slug?.toLowerCase().includes('repo')
   );
-  const liveRepoValue = liveRepoMetric ? parseFloat(liveRepoMetric.value) || 6.5 : 6.5;
+  const liveRepoValue = liveRepoMetric ? parseFloat(liveRepoMetric.value) || 5.25 : 5.25;
+
+  // Extract live CPI from metrics, fallback to 4.82% (from CSV)
+  const liveCpiMetric = metrics.find(
+    (m) =>
+      m.id?.toLowerCase().includes('cpi') ||
+      m.title?.toLowerCase().includes('cpi inflation') ||
+      m.slug?.toLowerCase().includes('cpi')
+  );
+  const liveCpiValue = liveCpiMetric ? parseFloat(liveCpiMetric.value) || 4.82 : 4.82;
 
   // Active perspective tab
   const [calculatorMode, setCalculatorMode] = useState<'loan' | 'savings'>('loan');
@@ -163,8 +172,8 @@ export const RepoRateCalculator: React.FC<RepoRateCalculatorProps> = ({
     const maturityDifference = newMaturity - currentMaturity;
     const interestDifference = newTotalInterest - currentTotalInterest;
 
-    // Headline CPI Inflation benchmark (~3.65%)
-    const inflationBenchmark = 3.65;
+    // Headline CPI Inflation benchmark from CSV
+    const inflationBenchmark = liveCpiValue;
     const realReturnCurrent = effectiveCurrentRate - inflationBenchmark;
     const realReturnNew = effectiveNewRate - inflationBenchmark;
 
@@ -181,7 +190,7 @@ export const RepoRateCalculator: React.FC<RepoRateCalculatorProps> = ({
       realReturnNew,
       inflationBenchmark,
     };
-  }, [depositAmount, fdTenureYears, currentFdRate, isSeniorCitizen, fdRateChangeBps]);
+  }, [depositAmount, fdTenureYears, currentFdRate, isSeniorCitizen, fdRateChangeBps, liveCpiValue]);
 
   // Copy shareable summary for Loan
   const handleCopyLoanSummary = () => {
@@ -232,7 +241,7 @@ export const RepoRateCalculator: React.FC<RepoRateCalculatorProps> = ({
   const faqs = [
     {
       q: 'How does an RBI Repo Rate change affect my Home Loan EMI?',
-      a: 'Since October 1, 2019, the Reserve Bank of India mandated that all floating-rate retail loans (home, auto, MSME) must be linked to an External Benchmark Lending Rate (EBLR). Most commercial banks use the RBI Policy Repo Rate as their benchmark. When the Monetary Policy Committee (MPC) alters the repo rate, banks are required to reset borrower interest rates within 3 calendar months.',
+      a: 'Since October 1, 2019, the Reserve Bank of India mandated that floating-rate retail loans issued since 1 Oct 2019 (such as home, auto, and personal loans) must be linked to an External Benchmark Lending Rate (EBLR). Most commercial banks use the RBI Policy Repo Rate as their benchmark. When the Monetary Policy Committee (MPC) alters the repo rate, banks are required to reset borrower interest rates within 3 calendar months. Note that older floating loans sanctioned prior to October 2019 under the Marginal Cost of Funds based Lending Rate (MCLR) or Base Rate regimes reset differently on scheduled annual or semi-annual reset cycles and do not automatically reflect repo rate changes immediately unless borrowers migrate to EBLR.',
     },
     {
       q: 'Why did my bank increase my loan tenure instead of reducing my EMI?',
@@ -248,7 +257,7 @@ export const RepoRateCalculator: React.FC<RepoRateCalculatorProps> = ({
     },
     {
       q: 'How does inflation affect my Fixed Deposit real returns?',
-      a: 'The real return on a Fixed Deposit is calculated by subtracting headline CPI inflation from the nominal FD interest rate after accounting for taxes. When CPI inflation is 3.65% and an FD offers 7.00%, the pre-tax real rate of return is approximately 3.35%.',
+      a: `The real return on a Fixed Deposit is calculated by subtracting headline CPI inflation from the nominal FD interest rate after accounting for taxes. When CPI inflation is ${liveCpiValue.toFixed(2)}% and an FD offers 7.00%, the pre-tax real rate of return is approximately ${(7.00 - liveCpiValue).toFixed(2)}% p.a. (7.00% - ${liveCpiValue.toFixed(2)}%).`,
     },
   ];
 
@@ -690,7 +699,7 @@ export const RepoRateCalculator: React.FC<RepoRateCalculatorProps> = ({
             <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-900/50 text-xs text-amber-900 dark:text-amber-200 flex gap-3">
               <ShieldCheck className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
               <div>
-                <strong className="font-bold">EBLR Mandate Notice:</strong> Since October 2019, all floating-rate retail loans are mandated by the Reserve Bank of India to reset whenever the repo rate benchmark changes. Your bank must communicate the revised EMI or tenure within 3 months.
+                <strong className="font-bold">EBLR Mandate Notice:</strong> Floating-rate retail loans issued since 1 Oct 2019 are mandated by the Reserve Bank of India to be linked to an External Benchmark Lending Rate (EBLR). When the repo rate benchmark changes, banks must reset borrower rates within 3 calendar months. Note that older floating loans issued prior to October 2019 under MCLR or Base Rate regimes reset differently on scheduled annual/semi-annual reset cycles.
               </div>
             </div>
           </div>

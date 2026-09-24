@@ -36,6 +36,10 @@ export default async function handler(req: any, res: any) {
     { loc: 'https://macronest.online/calendar', priority: '0.9', changefreq: 'daily' },
     { loc: 'https://macronest.online/calculator', priority: '0.8', changefreq: 'monthly' },
     { loc: 'https://macronest.online/insights', priority: '0.9', changefreq: 'weekly' },
+    { loc: 'https://macronest.online/about', priority: '0.7', changefreq: 'monthly' },
+    { loc: 'https://macronest.online/methodology', priority: '0.7', changefreq: 'monthly' },
+    { loc: 'https://macronest.online/contact', priority: '0.6', changefreq: 'monthly' },
+    { loc: 'https://macronest.online/privacy', priority: '0.5', changefreq: 'monthly' },
   ];
 
   posts.forEach((p) => {

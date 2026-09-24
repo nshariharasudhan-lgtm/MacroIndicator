@@ -15,12 +15,11 @@
       gtag('config', 'G-QTYKEZDT7J');
     </script>
     
-    <!-- Canonical URL for Google Search Console -->
+    <!-- Canonical Host & URL for Google Search Console -->
     <link rel="canonical" href="https://macronest.online/calculator" />
     
     <link rel="icon" type="image/svg+xml" href="/macronest-logo.svg" />
     <meta name="description" content="Simulate how RBI repo rate changes affect your Home Loan EMI, tenure, and bank Fixed Deposit returns with official External Benchmark Lending Rate (EBLR) formulas." />
-    <meta name="keywords" content="RBI repo rate calculator, home loan EMI repo rate impact, EBLR home loan calculator, fixed deposit return calculator, repo rate cut impact on EMI, MacroNest" />
     <meta name="author" content="MacroNest.online Research Desk" />
     
     <!-- Search Engine Indexing Directives -->
@@ -31,13 +30,16 @@
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#020617" media="(prefers-color-scheme: dark)" />
 
-    <!-- OpenGraph Social Cards -->
+    <!-- OpenGraph Social Cards (1200x630 PNG) -->
     <meta property="og:site_name" content="MacroNest.online" />
     <meta property="og:title" content="RBI Repo Rate EMI &amp; Savings Calculator | MacroNest.online" />
     <meta property="og:description" content="Simulate how RBI repo rate changes affect your Home Loan EMI, tenure, and bank Fixed Deposit returns with official EBLR benchmark formulas." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://macronest.online/calculator" />
-    <meta property="og:image" content="https://macronest.online/macronest-logo.svg" />
+    <meta property="og:image" content="https://macronest.online/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
     <meta property="og:locale" content="en_IN" />
 
     <!-- Twitter / X Cards -->
@@ -45,7 +47,7 @@
     <meta name="twitter:title" content="RBI Repo Rate EMI &amp; Savings Calculator | MacroNest.online" />
     <meta name="twitter:description" content="Simulate how RBI repo rate changes affect your Home Loan EMI, tenure, and bank Fixed Deposit returns with official EBLR benchmark formulas." />
     <meta name="twitter:url" content="https://macronest.online/calculator" />
-    <meta name="twitter:image" content="https://macronest.online/macronest-logo.svg" />
+    <meta name="twitter:image" content="https://macronest.online/og-image.png" />
 
     <!-- Schema.org Structured Data (JSON-LD) for Google Search Console -->
     <script type="application/ld+json">
@@ -77,8 +79,7 @@
           "name": "RBI Repo Rate EMI & Savings Calculator",
           "description": "Calculates monthly EMI changes, tenure shifts, and fixed deposit interest adjustments following RBI Monetary Policy Committee (MPC) repo rate decisions.",
           "provider": {
-            "@type": "Organization",
-            "name": "MacroNest.online"
+            "@id": "https://macronest.online/#organization"
           }
         },
         {
@@ -90,7 +91,7 @@
               "name": "How does an RBI Repo Rate change affect my Home Loan EMI?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Since October 1, 2019, the Reserve Bank of India mandated that all floating-rate retail loans (home, auto, MSME) must be linked to an External Benchmark Lending Rate (EBLR). Most commercial banks use the RBI Policy Repo Rate as their benchmark. When the Monetary Policy Committee (MPC) alters the repo rate, banks are required to reset borrower interest rates within 3 calendar months."
+                "text": "Since October 1, 2019, the Reserve Bank of India mandated that floating-rate retail loans issued since 1 Oct 2019 (such as home, auto, and personal loans) must be linked to an External Benchmark Lending Rate (EBLR). Most commercial banks use the RBI Policy Repo Rate as their benchmark. When the Monetary Policy Committee (MPC) alters the repo rate, banks are required to reset borrower interest rates within 3 calendar months. Older floating loans sanctioned prior to October 2019 under MCLR or Base Rate regimes reset differently on scheduled annual/semi-annual reset cycles."
               }
             },
             {
@@ -122,7 +123,7 @@
               "name": "How does inflation affect my Fixed Deposit real returns?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "The real return on a Fixed Deposit is calculated by subtracting headline CPI inflation from the nominal FD interest rate after accounting for taxes. When CPI inflation is 3.65% and an FD offers 7.00%, the pre-tax real rate of return is approximately 3.35%."
+                "text": "The real return on a Fixed Deposit is calculated by subtracting headline CPI inflation from the nominal FD interest rate after accounting for taxes. With current CPI inflation at 4.82% and an FD offering 7.00%, the pre-tax real rate of return is approximately 2.18% p.a. (7.00% - 4.82%)."
               }
             }
           ]
@@ -147,76 +148,210 @@
       ]
     }
     </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..800&family=JetBrains+Mono:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..800&family=JetBrains+Mono:wght@400;500;600;700&display=swap">
+    </noscript>
   </head>
-  <body class="bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased min-h-screen">
-    <!-- Prerendered Static Content for Search Engine Crawlers & Fallback -->
+  <body class="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen antialiased">
+    <!-- Server-Rendered Interactive Calculator Markup -->
     <div id="root">
-      <header style="padding: 1.5rem 1rem; border-bottom: 1px solid #e2e8f0; max-width: 80rem; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
-        <a href="/" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: inherit;">
-          <svg viewBox="0 0 560 135" fill="none" xmlns="http://www.w3.org/2000/svg" style="height: 38px; width: auto;" aria-label="MacroNest.online Logo" role="img">
-            <text x="10" y="66" font-family="'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="68" font-weight="800" letter-spacing="-1.5">
-              <tspan fill="#113824">MacroNest</tspan><tspan fill="#547838" font-weight="600">.online</tspan>
-            </text>
-            <line x1="16" y1="94" x2="132" y2="94" stroke="#4b3f36" stroke-width="1.75" stroke-linecap="round" />
-            <text x="278" y="99" text-anchor="middle" font-family="'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14.5" font-weight="600" letter-spacing="4.8" fill="#4b3f36">KNOWLEDGE TODAY</text>
-            <line x1="424" y1="94" x2="540" y2="94" stroke="#4b3f36" stroke-width="1.75" stroke-linecap="round" />
-            <text x="278" y="122" text-anchor="middle" font-family="'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13.5" font-weight="600" letter-spacing="6.8" fill="#4b3f36">A BRIGHTER TOMORROW</text>
-          </svg>
-        </a>
-        <nav style="display: flex; gap: 1rem; font-size: 0.875rem; font-weight: bold;">
-          <a href="/" style="text-decoration: none; color: #475569;">Indicators</a>
-          <a href="/calendar" style="text-decoration: none; color: #475569;">Release Calendar</a>
-          <a href="/calculator" style="text-decoration: none; color: #0f172a; border-bottom: 2px solid #0f172a; padding-bottom: 2px;">EMI Calculator</a>
-        </nav>
-      </header>
+      <div style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 1200px; margin: 0 auto; padding: 24px 16px;">
+        <header style="margin-bottom: 28px; border-bottom: 1px solid #e2e8f0; padding-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <a href="/" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;">
+            <svg viewBox="0 0 560 135" fill="none" xmlns="http://www.w3.org/2000/svg" style="height: 38px; width: auto;" aria-label="MacroNest.online Logo" role="img">
+              <text x="10" y="66" font-family="'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="68" font-weight="800" letter-spacing="-1.5">
+                <tspan fill="#113824">MacroNest</tspan><tspan fill="#547838" font-weight="600">.online</tspan>
+              </text>
+              <line x1="16" y1="94" x2="132" y2="94" stroke="#4b3f36" stroke-width="1.75" stroke-linecap="round" />
+              <text x="278" y="99" text-anchor="middle" font-family="'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14.5" font-weight="600" letter-spacing="4.8" fill="#4b3f36">KNOWLEDGE TODAY</text>
+              <line x1="424" y1="94" x2="540" y2="94" stroke="#4b3f36" stroke-width="1.75" stroke-linecap="round" />
+              <text x="278" y="122" text-anchor="middle" font-family="'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13.5" font-weight="600" letter-spacing="6.8" fill="#4b3f36">A BRIGHTER TOMORROW</text>
+            </svg>
+          </a>
+          <nav>
+            <a href="/" style="margin-right: 16px; color: #475569; font-weight: 600; text-decoration: none; font-size: 14px;">Indicators</a>
+            <a href="/calendar" style="margin-right: 16px; color: #475569; font-weight: 600; text-decoration: none; font-size: 14px;">Release Calendar</a>
+            <a href="/calculator" style="margin-right: 16px; color: #0f172a; font-weight: 700; text-decoration: none; font-size: 14px; border-bottom: 2px solid #0f172a; padding-bottom: 2px;">EMI Calculator</a>
+            <a href="/insights" style="color: #475569; font-weight: 600; text-decoration: none; font-size: 14px;">Insights</a>
+          </nav>
+        </header>
 
-      <main style="max-width: 80rem; margin: 0 auto; padding: 2rem 1rem;">
-        <article>
-          <header style="margin-bottom: 2rem;">
-            <p style="font-size: 0.75rem; color: #64748b; margin-bottom: 0.5rem;">MacroNest / RBI Policy Impact</p>
-            <h1 style="font-size: 2rem; font-weight: 800; color: #0f172a; margin: 0;">RBI Repo Rate EMI &amp; Savings Calculator</h1>
-            <p style="color: #475569; font-size: 0.95rem; margin-top: 0.5rem; max-width: 48rem;">
-              Simulate how Reserve Bank of India (RBI) Monetary Policy decisions impact your monthly loan EMIs, total interest expense, and bank Fixed Deposit returns.
-            </p>
-          </header>
+        <main>
+          {/* Top Header & Statutory Repo Rate Anchor */}
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0;">
+            <div>
+              <div style="font-size: 12px; color: #64748b; margin-bottom: 6px;">
+                <a href="/" style="color: #2563eb; text-decoration: none;">MacroNest</a> / <span>Repo Rate Impact Calculator</span>
+              </div>
+              <h1 style="font-size: 26px; font-weight: 800; color: #0f172a; margin: 0 0 6px 0; letter-spacing: -0.02em;">
+                RBI Repo Rate EMI &amp; Savings Calculator
+              </h1>
+              <p style="font-size: 14px; color: #475569; margin: 0; max-width: 680px; line-height: 1.5;">
+                Simulate how Reserve Bank of India (RBI) Monetary Policy decisions impact your monthly loan EMIs, loan tenure, and bank Fixed Deposit returns.
+              </p>
+            </div>
 
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px 18px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px;">
+              <div>
+                <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Current RBI Repo Rate</div>
+                <div style="font-size: 22px; font-weight: 800; color: #0f172a; font-family: monospace;">
+                  5.25%
+                  <span style="font-size: 11px; font-weight: 600; color: #059669; margin-left: 6px; font-family: sans-serif;">Statutory Anchor</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Interactive Calculator Section */}
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 32px;">
+            {/* Input Controls Column */}
+            <div style="background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 16px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+              <h2 style="font-size: 17px; font-weight: 700; color: #0f172a; margin: 0 0 16px 0;">
+                Home Loan Parameters
+              </h2>
+
+              <div style="margin-bottom: 18px;">
+                <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px;">
+                  <span>Loan Amount:</span>
+                  <strong style="color: #0f172a; font-family: monospace;">₹50,00,000 (₹50 Lakh)</strong>
+                </div>
+                <input type="range" min="500000" max="20000000" step="100000" value="5000000" style="width: 100%; accent-color: #2563eb;" />
+                <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
+                  <span style="font-size: 11px; padding: 3px 8px; background-color: #f1f5f9; border-radius: 6px; font-weight: 600; color: #475569;">₹30 Lakh</span>
+                  <span style="font-size: 11px; padding: 3px 8px; background-color: #dbeafe; border-radius: 6px; font-weight: 700; color: #1e40af;">₹50 Lakh</span>
+                  <span style="font-size: 11px; padding: 3px 8px; background-color: #f1f5f9; border-radius: 6px; font-weight: 600; color: #475569;">₹75 Lakh</span>
+                  <span style="font-size: 11px; padding: 3px 8px; background-color: #f1f5f9; border-radius: 6px; font-weight: 600; color: #475569;">₹1 Crore</span>
+                </div>
+              </div>
+
+              <div style="margin-bottom: 18px;">
+                <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px;">
+                  <span>Loan Tenure:</span>
+                  <strong style="color: #0f172a; font-family: monospace;">20 Years (240 Months)</strong>
+                </div>
+                <input type="range" min="1" max="30" step="1" value="20" style="width: 100%; accent-color: #2563eb;" />
+              </div>
+
+              <div style="margin-bottom: 18px;">
+                <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px;">
+                  <span>Current Interest Rate:</span>
+                  <strong style="color: #0f172a; font-family: monospace;">8.50% p.a.</strong>
+                </div>
+                <input type="range" min="6.0" max="15.0" step="0.05" value="8.50" style="width: 100%; accent-color: #2563eb;" />
+              </div>
+
+              <div style="margin-bottom: 18px;">
+                <label style="display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 8px;">
+                  RBI Repo Rate Scenario:
+                </label>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                  <button type="button" style="padding: 6px 12px; font-size: 12px; font-weight: 700; border-radius: 8px; border: 1px solid #93c5fd; background-color: #eff6ff; color: #1e40af; cursor: pointer;">
+                    -25 bps (Rate Cut)
+                  </button>
+                  <button type="button" style="padding: 6px 12px; font-size: 12px; font-weight: 600; border-radius: 8px; border: 1px solid #cbd5e1; background-color: #ffffff; color: #475569; cursor: pointer;">
+                    -50 bps
+                  </button>
+                  <button type="button" style="padding: 6px 12px; font-size: 12px; font-weight: 600; border-radius: 8px; border: 1px solid #cbd5e1; background-color: #ffffff; color: #475569; cursor: pointer;">
+                    +25 bps (Hike)
+                  </button>
+                </div>
+              </div>
+
+              {/* RBI Statutory Note */}
+              <div style="padding: 12px 14px; border-radius: 10px; background-color: #fefce8; border: 1px solid #fef08a; font-size: 12px; color: #713f12; line-height: 1.45;">
+                <strong>EBLR Mandate Notice:</strong> Floating-rate retail loans issued since 1 Oct 2019 are mandated by the Reserve Bank of India to be linked to an External Benchmark Lending Rate (EBLR). When the repo rate changes, banks must reset borrower rates within 3 calendar months. Older floating loans sanctioned prior to October 2019 under MCLR or Base Rate regimes reset differently on scheduled annual/semi-annual reset cycles.
+              </div>
+            </div>
+
+            {/* Calculated Output Card Column */}
+            <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8;">
+                  Projected EMI Impact
+                </span>
+                <span style="font-size: 11px; font-weight: 700; padding: 2px 8px; background-color: #065f46; color: #a7f3d0; border-radius: 6px;">
+                  New Rate: 8.25%
+                </span>
+              </div>
+
+              <div style="margin-bottom: 20px;">
+                <div style="font-size: 12px; color: #94a3b8; margin-bottom: 4px;">Current Monthly EMI:</div>
+                <div style="font-size: 26px; font-weight: 800; font-family: monospace; color: #ffffff;">
+                  ₹43,391 <span style="font-size: 13px; font-weight: 500; color: #94a3b8;">/ month</span>
+                </div>
+              </div>
+
+              <div style="background-color: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+                <div style="font-size: 12px; color: #38bdf8; font-weight: 600; margin-bottom: 4px;">With -25 bps Rate Cut:</div>
+                <div style="font-size: 28px; font-weight: 800; font-family: monospace; color: #38bdf8;">
+                  ₹42,580 <span style="font-size: 13px; font-weight: 500; color: #bae6fd;">/ month</span>
+                </div>
+                <div style="margin-top: 8px; font-size: 13px; font-weight: 700; color: #4ade80;">
+                  💰 Monthly Savings: ~₹812 / month
+                </div>
+                <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">
+                  (Total Lifetime Interest Saved: ~₹1,94,792 over 20 years)
+                </div>
+              </div>
+
+              <div style="font-size: 12px; color: #cbd5e1; line-height: 1.5; margin-bottom: 16px;">
+                <strong>Benchmark Simulation Note:</strong>
+                <ul style="padding-left: 18px; margin: 6px 0 0 0;">
+                  <li>On a ₹50 Lakh, 20-year home loan with an assumed baseline interest rate of 9.45% p.a. (or ~₹788/month savings at 8.50% p.a.): a -25 bps rate cut saves ~₹812/month; a -50 bps rate cut saves ~₹1,617/month.</li>
+                  <li><strong>Tenure Option:</strong> If you keep your monthly EMI constant at ₹43,391 after a 25 bps cut, your tenure reduces by ~9 months, saving significant interest.</li>
+                </ul>
+              </div>
+
+              <div style="border-top: 1px solid rgba(255,255,255,0.12); padding-top: 14px; font-size: 11px; color: #94a3b8;">
+                Real Inflation-Adjusted Return benchmark uses headline retail CPI inflation (4.82% y-o-y, August 2026).
+              </div>
+            </div>
+          </div>
+
+          {/* Section 2: FD Real-Return & Lending Regimes Guide */}
           <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;">
             <div style="padding: 1.5rem; border: 1px solid #e2e8f0; border-radius: 1rem; background-color: #f8fafc;">
-              <h2 style="font-size: 1.1rem; font-weight: bold; margin-top: 0;">Home &amp; Auto Loan EMI Simulation</h2>
-              <p style="font-size: 0.875rem; color: #475569;">
-                Floating-rate retail loans are mandated by the RBI to be linked to an External Benchmark Lending Rate (EBLR). When the MPC changes the Repo Rate, banks are required to pass through the change within 3 months.
+              <h2 style="font-size: 1.1rem; font-weight: bold; margin-top: 0; color: #0f172a;">Home &amp; Auto Loan EMI Simulation</h2>
+              <p style="font-size: 0.875rem; color: #475569; line-height: 1.5;">
+                Floating-rate retail loans issued since 1 Oct 2019 are mandated by the RBI to be linked to an External Benchmark Lending Rate (EBLR). When the MPC changes the Repo Rate, banks are required to pass through the change within 3 months. Older floating loans sanctioned prior to October 2019 under MCLR reset on scheduled reset dates.
               </p>
-              <ul style="font-size: 0.85rem; color: #334155; padding-left: 1.25rem;">
-                <li><strong>-25 bps Rate Cut:</strong> Saves ~₹812/month on a ₹50 Lakh 20-year home loan.</li>
-                <li><strong>-50 bps Rate Cut:</strong> Saves ~₹1,617/month or reduces tenure by ~17 months.</li>
+              <ul style="font-size: 0.85rem; color: #334155; padding-left: 1.25rem; line-height: 1.6;">
+                <li><strong>-25 bps Rate Cut:</strong> Saves ~₹812/month on a ₹50 Lakh 20-year loan (at assumed baseline rate: 9.45% p.a., or ~₹788/month at 8.50%).</li>
+                <li><strong>-50 bps Rate Cut:</strong> Saves ~₹1,617/month (at assumed baseline rate: 9.45% p.a.) or reduces tenure by ~17 months.</li>
                 <li><strong>Tenure Shortening Option:</strong> Keep EMI constant to save over ₹1.95 Lakh in lifetime interest.</li>
               </ul>
             </div>
 
             <div style="padding: 1.5rem; border: 1px solid #e2e8f0; border-radius: 1rem; background-color: #f8fafc;">
-              <h2 style="font-size: 1.1rem; font-weight: bold; margin-top: 0;">Bank Fixed Deposit (FD) Yields</h2>
-              <p style="font-size: 0.875rem; color: #475569;">
-                Commercial bank deposit rates adjust in response to systemic banking liquidity and the policy repo rate.
+              <h2 style="font-size: 1.1rem; font-weight: bold; margin-top: 0; color: #0f172a;">Bank Fixed Deposit (FD) Yields</h2>
+              <p style="font-size: 0.875rem; color: #475569; line-height: 1.5;">
+                Commercial bank deposit rates adjust in response to systemic banking liquidity and the policy repo rate (5.25%).
               </p>
-              <ul style="font-size: 0.85rem; color: #334155; padding-left: 1.25rem;">
-                <li><strong>Quarterly Compounding:</strong> Standard across SBI, HDFC Bank, ICICI Bank.</li>
+              <ul style="font-size: 0.85rem; color: #334155; padding-left: 1.25rem; line-height: 1.6;">
+                <li><strong>Quarterly Compounding:</strong> Standard across SBI, HDFC Bank, and ICICI Bank.</li>
                 <li><strong>Senior Citizens:</strong> +0.50% additional yield across 1-5 year tenures.</li>
-                <li><strong>Real Inflation-Adjusted Return:</strong> Assesses yields against MoSPI headline CPI inflation (~3.65%).</li>
+                <li><strong>Real Inflation-Adjusted Return:</strong> With current headline CPI inflation at 4.82% and an FD offering 7.00%, the pre-tax real rate of return is approximately 2.18% p.a. (7.00% - 4.82%).</li>
               </ul>
             </div>
           </section>
 
+          {/* Section 3: Frequently Asked Questions */}
           <section style="border-top: 1px solid #e2e8f0; padding-top: 2rem;">
             <h2 style="font-size: 1.25rem; font-weight: bold; color: #0f172a;">Frequently Asked Questions on Repo Rate &amp; EMIs</h2>
             <div style="margin-top: 1.25rem; display: flex; flex-direction: column; gap: 1.25rem;">
               <div>
                 <h3 style="font-size: 1rem; font-weight: bold; color: #1e293b; margin: 0 0 0.35rem 0;">How does an RBI Repo Rate change affect my Home Loan EMI?</h3>
-                <p style="font-size: 0.875rem; color: #475569; margin: 0; line-height: 1.5;">Since October 1, 2019, the Reserve Bank of India mandated that all floating-rate retail loans (home, auto, MSME) must be linked to an External Benchmark Lending Rate (EBLR). Most commercial banks use the RBI Policy Repo Rate as their benchmark. When the Monetary Policy Committee (MPC) alters the repo rate, banks are required to reset borrower interest rates within 3 calendar months.</p>
+                <p style="font-size: 0.875rem; color: #475569; margin: 0; line-height: 1.5;">Since October 1, 2019, the Reserve Bank of India mandated that floating-rate retail loans issued since 1 Oct 2019 (such as home, auto, and personal loans) must be linked to an External Benchmark Lending Rate (EBLR). Most commercial banks use the RBI Policy Repo Rate as their benchmark. When the Monetary Policy Committee (MPC) alters the repo rate, banks are required to reset borrower interest rates within 3 calendar months. Note that older floating loans sanctioned prior to October 2019 under Marginal Cost of Funds based Lending Rate (MCLR) or Base Rate regimes reset differently on scheduled annual/semi-annual reset cycles and do not automatically reflect repo rate changes immediately unless borrowers migrate to EBLR.</p>
               </div>
               
               <div>
                 <h3 style="font-size: 1rem; font-weight: bold; color: #1e293b; margin: 0 0 0.35rem 0;">Why did my bank increase my loan tenure instead of reducing my EMI?</h3>
-                <p style="font-size: 0.875rem; color: #475569; margin: 0; line-height: 1.5;">Most Indian public and private sector banks (including SBI, HDFC, and ICICI) configure floating loans to automatically maintain a fixed monthly EMI and adjust the remaining loan tenure when interest rates change. However, as a borrower, you have the right to request your lender to keep the tenure constant and decrease your monthly EMI payment instead.</p>
+                <p style="font-size: 0.875rem; color: #475569; margin: 0; line-height: 1.5;">Most Indian public and private sector banks configure floating loans to automatically maintain a fixed monthly EMI and adjust the remaining loan tenure when interest rates change. However, as a borrower, you have the right to request your lender to keep the tenure constant and decrease your monthly EMI payment instead.</p>
               </div>
 
               <div>
@@ -231,12 +366,31 @@
 
               <div>
                 <h3 style="font-size: 1rem; font-weight: bold; color: #1e293b; margin: 0 0 0.35rem 0;">How does inflation affect my Fixed Deposit real returns?</h3>
-                <p style="font-size: 0.875rem; color: #475569; margin: 0; line-height: 1.5;">The real return on a Fixed Deposit is calculated by subtracting headline CPI inflation from the nominal FD interest rate after accounting for taxes. When CPI inflation is 3.65% and an FD offers 7.00%, the pre-tax real rate of return is approximately 3.35%.</p>
+                <p style="font-size: 0.875rem; color: #475569; margin: 0; line-height: 1.5;">The real return on a Fixed Deposit is calculated by subtracting headline CPI inflation from the nominal FD interest rate after accounting for taxes. When CPI inflation is 4.82% and an FD offers 7.00%, the pre-tax real rate of return is approximately 2.18% p.a. (7.00% - 4.82%).</p>
               </div>
             </div>
           </section>
-        </article>
-      </main>
+        </main>
+
+        <footer style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #64748b;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+              <a href="/about" style="color: #475569; text-decoration: none; font-weight: 600;">About</a>
+              <a href="/methodology" style="color: #475569; text-decoration: none; font-weight: 600;">Methodology</a>
+              <a href="/calendar" style="color: #475569; text-decoration: none; font-weight: 600;">Release Calendar</a>
+              <a href="/calculator" style="color: #475569; text-decoration: none; font-weight: 600;">EMI Calculator</a>
+              <a href="/insights" style="color: #475569; text-decoration: none; font-weight: 600;">Insights</a>
+              <a href="/contact" style="color: #475569; text-decoration: none; font-weight: 600;">Contact</a>
+              <a href="/privacy" style="color: #475569; text-decoration: none; font-weight: 600;">Privacy Policy</a>
+              <a href="/sitemap.xml" style="color: #475569; text-decoration: none; font-weight: 600;">Sitemap</a>
+            </div>
+            <span>&copy; 2026 MacroNest.online</span>
+          </div>
+          <p style="margin: 0; font-size: 11px; color: #94a3b8; line-height: 1.4;">
+            <strong>Disclaimer:</strong> Not affiliated with RBI or the Government of India. For information only, not financial advice.
+          </p>
+        </footer>
+      </div>
     </div>
 
     <!-- Client-Side React Hydration -->

@@ -1,7 +1,6 @@
 export function updatePageSEO(seo: {
   title: string;
   description: string;
-  keywords?: string[];
   canonicalUrl?: string;
   ogType?: string;
   ogImage?: string;
@@ -32,23 +31,16 @@ export function updatePageSEO(seo: {
   }
   metaRobots.setAttribute('content', robotsContent);
 
-  // Update or create meta keywords
-  if (seo.keywords && seo.keywords.length > 0) {
-    let metaKeywords = document.querySelector('meta[name="keywords"]');
-    if (!metaKeywords) {
-      metaKeywords = document.createElement('meta');
-      metaKeywords.setAttribute('name', 'keywords');
-      document.head.appendChild(metaKeywords);
-    }
-    metaKeywords.setAttribute('content', seo.keywords.join(', '));
+  // Ensure meta keywords tag is removed (clean modern SEO)
+  const existingKeywords = document.querySelector('meta[name="keywords"]');
+  if (existingKeywords) {
+    existingKeywords.remove();
   }
 
-  // Canonical link tag
+  // Canonical link tag - strictly canonicalize to https://macronest.online without www
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
   const canonicalUrl =
-    seo.canonicalUrl ||
-    (typeof window !== 'undefined'
-      ? `${window.location.origin}${window.location.pathname}`
-      : 'https://macronest.online/');
+    seo.canonicalUrl || `https://macronest.online${currentPath === '/' ? '/' : currentPath.replace(/\/+$/, '')}`;
 
   let linkCanonical = document.querySelector('link[rel="canonical"]');
   if (!linkCanonical) {
@@ -58,6 +50,8 @@ export function updatePageSEO(seo: {
   }
   linkCanonical.setAttribute('href', canonicalUrl);
 
+  const ogImageUrl = seo.ogImage || 'https://macronest.online/og-image.png';
+
   // Update OpenGraph tags
   const ogTags: Record<string, string> = {
     'og:title': seo.title,
@@ -65,11 +59,9 @@ export function updatePageSEO(seo: {
     'og:type': seo.ogType || 'website',
     'og:url': canonicalUrl,
     'og:site_name': 'MacroNest.online',
+    'og:image': ogImageUrl,
+    'og:locale': 'en_IN',
   };
-
-  if (seo.ogImage) {
-    ogTags['og:image'] = seo.ogImage;
-  }
 
   Object.entries(ogTags).forEach(([prop, content]) => {
     let tag = document.querySelector(`meta[property="${prop}"]`);
@@ -81,17 +73,14 @@ export function updatePageSEO(seo: {
     tag.setAttribute('content', content);
   });
 
-  // Update Twitter cards
+  // Update Twitter cards (1200x630 summary_large_image)
   const twitterTags: Record<string, string> = {
     'twitter:card': 'summary_large_image',
     'twitter:title': seo.title,
     'twitter:description': seo.description,
     'twitter:url': canonicalUrl,
+    'twitter:image': ogImageUrl,
   };
-
-  if (seo.ogImage) {
-    twitterTags['twitter:image'] = seo.ogImage;
-  }
 
   Object.entries(twitterTags).forEach(([name, content]) => {
     let tag = document.querySelector(`meta[name="${name}"]`);
@@ -103,17 +92,15 @@ export function updatePageSEO(seo: {
     tag.setAttribute('content', content);
   });
 
-  // Structured Data (JSON-LD)
-  let scriptSchema = document.getElementById('dynamic-page-structured-data');
+  // Inject or update structured data (JSON-LD)
   if (seo.structuredData) {
-    if (!scriptSchema) {
-      scriptSchema = document.createElement('script');
-      scriptSchema.id = 'dynamic-page-structured-data';
-      scriptSchema.setAttribute('type', 'application/ld+json');
-      document.head.appendChild(scriptSchema);
+    let scriptTag = document.querySelector('script#page-structured-data');
+    if (!scriptTag) {
+      scriptTag = document.createElement('script');
+      scriptTag.id = 'page-structured-data';
+      scriptTag.setAttribute('type', 'application/ld+json');
+      document.head.appendChild(scriptTag);
     }
-    scriptSchema.textContent = JSON.stringify(seo.structuredData, null, 2);
-  } else if (scriptSchema) {
-    scriptSchema.remove();
+    scriptTag.textContent = JSON.stringify(seo.structuredData);
   }
 }

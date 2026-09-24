@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
-    "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs && cp dist/global/index.html dist/global.html && cp dist/calendar/index.html dist/calendar.html && cp dist/calculator/index.html dist/calculator.html && cp dist/insights/index.html dist/insights.html && cp dist/admin/index.html dist/admin.html && tsx scripts/prerender-articles.ts",
+    "build": "tsx scripts/sync-data.ts && vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs && cp dist/global/index.html dist/global.html && cp dist/calendar/index.html dist/calendar.html && cp dist/calculator/index.html dist/calculator.html && cp dist/insights/index.html dist/insights.html && cp dist/about/index.html dist/about.html && cp dist/methodology/index.html dist/methodology.html && cp dist/contact/index.html dist/contact.html && cp dist/privacy/index.html dist/privacy.html && cp dist/admin/index.html dist/admin.html && tsx scripts/prerender-articles.ts",
     "start": "node dist/server.cjs",
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",

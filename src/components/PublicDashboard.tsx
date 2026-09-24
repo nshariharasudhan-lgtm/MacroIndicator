@@ -47,8 +47,8 @@ export const PublicDashboard: FC<PublicDashboardProps> = ({
     return { domesticMetrics: domestic, globalMetrics: global };
   }, [metrics]);
 
-  const publishedDomestic = useMemo(() => domesticMetrics.filter((m) => m.isPublished), [domesticMetrics]);
-  const publishedGlobal = useMemo(() => globalMetrics.filter((m) => m.isPublished), [globalMetrics]);
+  const publishedDomestic = useMemo(() => domesticMetrics.filter((m) => m.isPublished !== false), [domesticMetrics]);
+  const publishedGlobal = useMemo(() => globalMetrics.filter((m) => m.isPublished !== false), [globalMetrics]);
 
   // Active pool based on selected tab
   const activePool = currentTab === 'global' ? publishedGlobal : publishedDomestic;
@@ -153,7 +153,7 @@ export const PublicDashboard: FC<PublicDashboardProps> = ({
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
           </span>
-          <span>Verified Statutory Feeds</span>
+          <span>Compiled from RBI, MoSPI &amp; GSTN</span>
         </div>
       </div>
 
@@ -327,8 +327,8 @@ export const PublicDashboard: FC<PublicDashboardProps> = ({
       <div className="pt-6 border-t border-slate-100 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500 dark:text-slate-400">
         <div>
           {currentTab === 'global'
-            ? 'Official global feeds: US Federal Reserve (FOMC), US Bureau of Labor Statistics, European Central Bank, ICE, and NBS China.'
-            : 'Official domestic feeds: Reserve Bank of India (RBI), MoSPI, Ministry of Commerce & Industry, GSTN, and NSDL.'}
+            ? 'Data compiled from official sources: US Federal Reserve (FOMC), US Bureau of Labor Statistics, European Central Bank, ICE, and NBS China.'
+            : 'Data compiled from official sources such as RBI, MoSPI and GSTN, plus other public sources.'}
         </div>
         <div className="text-right">
           Showing {filteredMetrics.length} of {activePool.length} {currentTab === 'global' ? 'global' : 'domestic'} indicators

@@ -135,25 +135,76 @@ export function parseMetricsCSV(csvText: string): {
   }
 
   // Header row normalization (lowercase + underscores)
-  const headers = rows[0].map((h) => h.toLowerCase().replace(/[^a-z0-9_]/g, '_').replace(/_+/g, '_').trim());
+  const rawHeaders = rows[0];
+  const headers = rawHeaders.map((h) =>
+    h.toLowerCase().replace(/[^a-z0-9_]/g, '_').replace(/_+/g, '_').trim()
+  );
   const headerMap = new Map<string, number>();
   headers.forEach((h, index) => {
     headerMap.set(h, index);
   });
 
-  // Verify critical columns
-  const slugIdx = headerMap.get('indicator_slug') ?? headerMap.get('slug') ?? headerMap.get('id');
-  const titleIdx = headerMap.get('indicator_title') ?? headerMap.get('title');
+  // Helper to match column by multiple alias names
+  const findColIdx = (...aliases: string[]): number | undefined => {
+    for (const alias of aliases) {
+      const normalized = alias.toLowerCase().replace(/[^a-z0-9_]/g, '_').replace(/_+/g, '_').trim();
+      const idx = headerMap.get(normalized);
+      if (idx !== undefined) return idx;
+    }
+    // Also try fuzzy substring matching if exact match not found
+    for (const alias of aliases) {
+      const normalized = alias.toLowerCase().replace(/[^a-z0-9_]/g, '_').replace(/_+/g, '_').trim();
+      for (const [key, idx] of headerMap.entries()) {
+        if (key === normalized || key.includes(normalized) || normalized.includes(key)) {
+          return idx;
+        }
+      }
+    }
+    return undefined;
+  };
 
-  if (slugIdx === undefined && titleIdx === undefined) {
-    errors.push('Could not find indicator_slug or indicator_title column in CSV headers.');
-    return { metrics: [], errors, totalRows: rows.length - 1 };
+  const slugColIdx = findColIdx('indicator_slug', 'slug', 'id', 'indicator_id', 'code', 'key', 'identifier', 'symbol');
+  const titleColIdx = findColIdx('indicator_title', 'title', 'indicator', 'indicator_name', 'name', 'metric', 'metric_name', 'macro_indicator', 'series', 'item', 'heading');
+
+  // If neither slug nor title column was explicitly found, fallback to column 0 or 1 if rows exist
+  let finalSlugIdx = slugColIdx;
+  let finalTitleIdx = titleColIdx;
+  if (finalSlugIdx === undefined && finalTitleIdx === undefined) {
+    if (headers.length >= 2) {
+      finalTitleIdx = 0;
+      finalSlugIdx = 0;
+    } else {
+      errors.push('Could not find indicator or title column in CSV headers.');
+      return { metrics: [], errors, totalRows: rows.length - 1 };
+    }
   }
 
-  const getCol = (row: string[], colName: string, fallbackIdx?: number): string => {
-    const idx = headerMap.get(colName) ?? fallbackIdx;
+  const categoryColIdx = findColIdx('category', 'sector', 'domain', 'classification', 'segment', 'type', 'group');
+  const frequencyColIdx = findColIdx('release_frequency', 'frequency', 'cadence', 'periodicity', 'interval');
+  const stanceColIdx = findColIdx('stance_state', 'stance', 'state', 'status', 'market_stance', 'policy_stance');
+  const releaseWindowColIdx = findColIdx('typical_release_window', 'release_window', 'typical_window', 'window', 'schedule', 'timing');
+  const valueColIdx = findColIdx('main_metric_value', 'value', 'latest_value', 'current_value', 'latest', 'metric_value', 'level', 'reading', 'figure', 'val');
+  const unitColIdx = findColIdx('unit_suffix', 'unit', 'units', 'denomination', 'measure', 'currency', 'scale');
+  const prevValColIdx = findColIdx('previous_value', 'previous', 'prev_value', 'prev', 'prior_value', 'prior', 'last_value', 'last');
+  const deltaValColIdx = findColIdx('delta_value', 'delta', 'change', 'change_value', 'variation', 'diff', 'net_change');
+  const deltaDispColIdx = findColIdx('delta_display', 'change_display', 'delta_formatted', 'display_change', 'change_text');
+  const trendDirColIdx = findColIdx('trend_direction', 'trend', 'direction', 'movement');
+  const trendBadgeColIdx = findColIdx('trend_badge_style', 'badge_style', 'badge', 'style', 'color');
+  const targetColIdx = findColIdx('target_anchor', 'target', 'anchor', 'benchmark', 'reference_anchor', 'policy_target');
+  const narrativeColIdx = findColIdx('narrative_commentary', 'commentary', 'narrative', 'summary', 'description', 'notes', 'details', 'explanation');
+  const sourceLabelColIdx = findColIdx('source_label', 'source_name', 'source', 'agency', 'publisher', 'institution', 'organization');
+  const sourceUrlColIdx = findColIdx('source_url', 'url', 'link', 'source_link', 'web_link');
+  const obsPeriodColIdx = findColIdx('observation_period', 'period', 'reference_period', 'period_observed', 'month_quarter', 'as_of', 'time_period');
+  const releaseDateColIdx = findColIdx('release_date', 'released_on', 'published_date', 'publication_date', 'date', 'as_of_date');
+  const nextReleaseColIdx = findColIdx('next_expected_release', 'next_release', 'next_release_date', 'expected_release', 'next_date', 'next_schedule');
+  const dataStatusColIdx = findColIdx('data_status', 'data_quality', 'status_data', 'provisional_status');
+  const verificationColIdx = findColIdx('verification_status', 'verification', 'verified');
+  const researchNotesColIdx = findColIdx('research_notes', 'notes_internal', 'internal_notes');
+  const publishColIdx = findColIdx('publish', 'is_published', 'published', 'live', 'active', 'visibility', 'status_publish');
+
+  const getColByComputedIdx = (row: string[], idx: number | undefined): string => {
     if (idx !== undefined && idx < row.length) {
-      return row[idx].trim();
+      return (row[idx] || '').trim();
     }
     return '';
   };
@@ -165,46 +216,60 @@ export function parseMetricsCSV(csvText: string): {
     const row = rows[r];
     if (row.length === 0 || row.every((c) => c === '')) continue;
 
-    const slug = getCol(row, 'indicator_slug') || getCol(row, 'slug') || getCol(row, 'id');
-    const title = getCol(row, 'indicator_title') || getCol(row, 'title');
+    const slugRaw = getColByComputedIdx(row, finalSlugIdx);
+    const titleRaw = getColByComputedIdx(row, finalTitleIdx);
 
-    if (!slug && !title) {
-      errors.push(`Row ${r + 1}: Skipped row because both indicator_slug and indicator_title are missing.`);
+    if (!slugRaw && !titleRaw) {
       continue;
     }
 
-    const id = slug || title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-    const category = (getCol(row, 'category') || 'REAL ECONOMY').toUpperCase() as Category;
-    const frequency = (getCol(row, 'release_frequency') || getCol(row, 'frequency') || 'MONTHLY').toUpperCase() as Frequency;
-    const stanceState = getCol(row, 'stance_state') || getCol(row, 'status') || 'Normal';
+    const title = titleRaw || slugRaw;
+    const slug = slugRaw || title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    const id = slug || `metric-${r}`;
+
+    const categoryRaw = getColByComputedIdx(row, categoryColIdx);
+    const category = (categoryRaw || 'REAL ECONOMY').toUpperCase() as Category;
+
+    const frequencyRaw = getColByComputedIdx(row, frequencyColIdx);
+    const frequency = (frequencyRaw || 'MONTHLY').toUpperCase() as Frequency;
+
+    const stanceState = getColByComputedIdx(row, stanceColIdx) || 'Normal';
     const status = deriveMetricStatus(stanceState);
-    const releaseWindow = getCol(row, 'typical_release_window') || getCol(row, 'release_window');
-    const mainMetricValue = getCol(row, 'main_metric_value') || getCol(row, 'value') || '—';
-    const unitSuffix = getCol(row, 'unit_suffix') || getCol(row, 'unit');
-    const previousValue = getCol(row, 'previous_value');
-    const deltaValue = getCol(row, 'delta_value');
-    const deltaDisplay = getCol(row, 'delta_display');
-    const trendDirection = getCol(row, 'trend_direction') || 'na';
-    const trendBadgeStyle = getCol(row, 'trend_badge_style') || 'neutral';
-    const targetAnchor = getCol(row, 'target_anchor');
-    const narrativeCommentary = getCol(row, 'narrative_commentary') || getCol(row, 'summary');
-    const sourceLabel = getCol(row, 'source_label') || getCol(row, 'source_name') || 'Official Release';
-    const sourceUrl = getCol(row, 'source_url');
-    const observationPeriod = getCol(row, 'observation_period');
-    const releaseDate = getCol(row, 'release_date') || new Date().toISOString().split('T')[0];
-    const nextExpectedRelease = getCol(row, 'next_expected_release');
-    const dataStatus = getCol(row, 'data_status') || 'provisional';
-    const verificationStatus = getCol(row, 'verification_status') || 'verified_official';
-    const researchNotes = getCol(row, 'research_notes');
-    const publishRaw = (getCol(row, 'publish') || 'TRUE').toUpperCase();
-    const isPublished = publishRaw === 'TRUE' || publishRaw === '1' || publishRaw === 'YES' || publishRaw === 'T';
+    const releaseWindow = getColByComputedIdx(row, releaseWindowColIdx);
+    const mainMetricValue = getColByComputedIdx(row, valueColIdx) || '—';
+    const unitSuffix = getColByComputedIdx(row, unitColIdx);
+    const previousValue = getColByComputedIdx(row, prevValColIdx);
+    const deltaValue = getColByComputedIdx(row, deltaValColIdx);
+    const deltaDisplay = getColByComputedIdx(row, deltaDispColIdx);
+    const trendDirection = getColByComputedIdx(row, trendDirColIdx) || 'na';
+    const trendBadgeStyle = getColByComputedIdx(row, trendBadgeColIdx) || 'neutral';
+    const targetAnchor = getColByComputedIdx(row, targetColIdx);
+    const narrativeCommentary = getColByComputedIdx(row, narrativeColIdx);
+    const sourceLabel = getColByComputedIdx(row, sourceLabelColIdx) || 'Official Release';
+    const sourceUrl = getColByComputedIdx(row, sourceUrlColIdx);
+    const observationPeriod = getColByComputedIdx(row, obsPeriodColIdx);
+    const releaseDate = getColByComputedIdx(row, releaseDateColIdx) || new Date().toISOString().split('T')[0];
+    const nextExpectedRelease = getColByComputedIdx(row, nextReleaseColIdx);
+    const dataStatus = getColByComputedIdx(row, dataStatusColIdx) || 'provisional';
+    const verificationStatus = getColByComputedIdx(row, verificationColIdx) || 'verified_official';
+    const researchNotes = getColByComputedIdx(row, researchNotesColIdx);
+
+    // Published status: if explicitly FALSE / 0 / NO / DRAFT, then false. Otherwise TRUE.
+    const publishVal = getColByComputedIdx(row, publishColIdx).toUpperCase();
+    const isExplicitlyDraft =
+      publishVal === 'FALSE' ||
+      publishVal === '0' ||
+      publishVal === 'NO' ||
+      publishVal === 'DRAFT' ||
+      publishVal === 'OFF';
+    const isPublished = !isExplicitlyDraft;
 
     const deltaType = deriveDeltaType(trendBadgeStyle, trendDirection, deltaValue);
 
     const metric: MacroMetric = {
       id,
-      slug: slug || id,
-      title: title || slug,
+      slug,
+      title,
       category,
       frequency,
       status,

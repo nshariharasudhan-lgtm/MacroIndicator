@@ -198,7 +198,7 @@ export const MetricCard: FC<MetricCardProps> = ({
             <span className="px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider rounded-md bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">
               {metric.category}
             </span>
-            {!metric.isPublished && (
+            {isAdmin && metric.isPublished === false && (
               <span className="px-1.5 py-0.5 text-[10px] font-bold rounded bg-amber-100 text-amber-900 dark:bg-amber-950/70 dark:text-amber-200">
                 Draft
               </span>
@@ -241,20 +241,11 @@ export const MetricCard: FC<MetricCardProps> = ({
           {metric.title}
         </h2>
 
-        {/* Observation Period & Data Status Badge */}
+        {/* Observation Period */}
         {metric.observationPeriod && (
           <div className="mt-1 flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300">
-            <span>Period:</span>
+            <span className="text-slate-500 dark:text-slate-400">Period:</span>
             <span className="font-semibold text-slate-800 dark:text-slate-200">{metric.observationPeriod}</span>
-            {metric.dataStatus && (
-              <span className={`px-1.5 py-0.2 rounded text-[10px] uppercase font-bold tracking-wider ${
-                metric.dataStatus === 'final'
-                  ? 'bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-200'
-                  : 'bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200'
-              }`}>
-                {metric.dataStatus}
-              </span>
-            )}
           </div>
         )}
 
@@ -320,9 +311,9 @@ export const MetricCard: FC<MetricCardProps> = ({
               Next: {metric.nextExpectedRelease}
             </span>
           )}
-          <div className="flex items-center gap-1 font-semibold text-slate-700 dark:text-slate-200">
+          <div className="flex items-center gap-1 font-semibold text-slate-700 dark:text-slate-200" title={`Released on ${metric.releaseDate}`}>
             <Calendar className="w-3 h-3 shrink-0" />
-            <span>{metric.releaseDate}</span>
+            <span>Last updated: {metric.releaseDate}</span>
           </div>
         </div>
       </footer>

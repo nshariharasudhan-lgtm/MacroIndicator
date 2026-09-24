@@ -154,35 +154,54 @@ export const CsvUploadModal: FC<CsvUploadModalProps> = ({
       }
 
       // 4. Send to backend server
-      try {
-        const res = await fetch(`/api/metrics/upload-csv?mode=${syncMode}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            csvContent: fileContent,
-            mode: syncMode,
-          }),
-        });
+      const token =
+        (typeof window !== 'undefined' &&
+          (sessionStorage.getItem('admin_token') || localStorage.getItem('admin_token'))) ||
+        '';
 
-        if (res.ok) {
-          const data = await res.json();
-          setStatusMessage({
-            type: 'success',
-            text: `Success! Synchronized ${data.totalUploaded || parsed.metrics.length} metrics (${data.publishedCount} published). Client site updated.`,
-          });
-        } else {
-          setStatusMessage({
-            type: 'success',
-            text: `Updated ${parsed.metrics.length} metrics on client dashboard.`,
-          });
-        }
-      } catch (backendErr) {
-        // Backend might be offline or static preview, but client state updated
-        setStatusMessage({
-          type: 'success',
-          text: `Updated ${parsed.metrics.length} metrics on client dashboard.`,
-        });
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
       }
+
+      const res = await fetch(`/api/metrics/upload-csv?mode=${syncMode}`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          csvContent: fileContent,
+          mode: syncMode,
+        }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `Upload failed (Status: ${res.status})`);
+      }
+
+      const data = await res.json();
+      const updatedMetrics = data.metrics || parsed.metrics;
+
+      // Persist and broadcast synchronized indicators
+      try {
+        localStorage.setItem('macronest_indicators_cache_v3', JSON.stringify(updatedMetrics));
+        localStorage.setItem('macronest_raw_csv_v3', fileContent);
+        if (typeof BroadcastChannel !== 'undefined') {
+          const ch = new BroadcastChannel('macronest_live_sync');
+          ch.postMessage({ type: 'METRICS_UPDATED', metrics: updatedMetrics });
+          ch.close();
+        }
+      } catch (_) {}
+
+      if (onUploadSuccess) {
+        await onUploadSuccess(updatedMetrics, fileContent);
+      }
+
+      setStatusMessage({
+        type: 'success',
+        text: `Success! Synchronized ${data.totalUploaded || updatedMetrics.length} indicators (${data.publishedCount ?? updatedMetrics.length} published). Client site updated.`,
+      });
 
       setTimeout(() => {
         onClose();
