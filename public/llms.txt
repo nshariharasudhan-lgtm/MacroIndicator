@@ -1,24 +1,26 @@
-# MacroNest.online — India Macroeconomic Indicators & Research
+# MacroNest.online
 
-> MacroNest.online ("Knowledge Today, A Brighter Tomorrow") is a dedicated macroeconomic data monitor tracking Indian central banking policy rates, systemic liquidity deficit/surplus, retail and wholesale inflation prints, foreign exchange reserves, gross GST collections, and gross domestic product (GDP) metrics directly from official statutory feeds.
+> MacroNest.online is an official macroeconomic intelligence and data research portal providing real-time tracking of Reserve Bank of India (RBI) policy rates, systemic banking liquidity, retail CPI inflation, foreign exchange reserves, gross GST collections, national GDP accounts, and key global benchmarks.
 
-## Core Capabilities & Monitored Metrics
-- **Reserve Bank of India (RBI) Policy Rates**: Official repo rate, Standing Deposit Facility (SDF), and Marginal Standing Facility (MSF) corridor anchors set by the Monetary Policy Committee (MPC).
-- **Banking System Liquidity**: Daily systemic net liquidity deficit or surplus published by the Clearing Corporation of India Limited (CCIL) and RBI.
-- **Consumer Price Index (CPI)**: Headline and core retail inflation year-on-year prints compiled and published monthly by MoSPI.
-- **Foreign Exchange (Forex) Reserves**: Weekly statistical supplement (WSS) prints of total foreign currency assets, gold, and SDR holdings.
-- **Gross Goods & Services Tax (GST)**: Monthly gross nationwide collections reported by the Ministry of Finance.
-- **Macroeconomic Release Calendar**: Statutory publishing windows for RBI MPC policy decisions, MoSPI data releases, and national statistics.
+## Core Feeds & Endpoints
 
-## Canonical URLs & Feeds
-- **Homepage & Public Indicator Dashboard**: https://macronest.online/
-- **Macroeconomic Release Calendar**: https://macronest.online/calendar
-- **Direct Machine-Readable CSV Feed**: https://macronest.online/data/metrics.csv
-- **XML Sitemap**: https://macronest.online/sitemap.xml
-- **Robots Directives**: https://macronest.online/robots.txt
+- [MacroNest Dashboard](https://macronest.online/): Primary interactive dashboard tracking domestic Indian macroeconomic indicators and global policy rates.
+- [Global Indicators](https://macronest.online/global): International macroeconomic benchmarks including US Federal Funds Rate, US CPI inflation, 10Y US Treasury yields, Dollar Index (DXY), Brent crude, and gold.
+- [Macroeconomic Release Calendar](https://macronest.online/calendar): Statutory publishing windows and upcoming schedule for RBI MPC meetings, MoSPI inflation prints, and national statistical announcements.
+- [Repo Rate & EMI Simulator](https://macronest.online/calculator): Financial calculator simulating RBI monetary policy repo rate changes and their transmission into floating home loans (EBLR) and fixed deposits.
+- [Direct Machine-Readable CSV Feed](https://macronest.online/data/metrics.csv): Clean, machine-readable structured CSV data feed containing all indicators, frequencies, units, latest prints, and statutory sources.
+- [REST API Metrics Endpoint](https://macronest.online/api/metrics): JSON API returning verified macroeconomic observations, deltas, and official source links for AI agents and automated pipelines.
 
-## Primary Official Data Sources
-- Reserve Bank of India (RBI): https://www.rbi.org.in
-- Ministry of Statistics and Programme Implementation (MoSPI): https://www.mospi.gov.in
-- Ministry of Finance, Government of India: https://finmin.nic.in
-- Clearing Corporation of India Limited (CCIL): https://www.ccilindia.com
+## Optional
+
+- [XML Sitemap](https://macronest.online/sitemap.xml): Comprehensive URL index for web crawlers and search engine indexing bots.
+- [Robots Directives](https://macronest.online/robots.txt): Machine access permissions and canonical feed locations.
+- [Extended Data Dictionary](https://macronest.online/llms-full.txt): Full schema definitions, statutory sources, and indicator descriptions.
+
+## Primary Official Statutory Sources
+
+- [Reserve Bank of India](https://www.rbi.org.in): Central banking authority responsible for monetary policy, repo rate anchors, and Weekly Statistical Supplements.
+- [Ministry of Statistics and Programme Implementation](https://www.mospi.gov.in): Primary authority for CPI retail inflation, Index of Industrial Production (IIP), and national GDP accounts.
+- [Ministry of Finance, Government of India](https://finmin.nic.in): Statutory publisher of gross nationwide Goods & Services Tax (GST) collections and fiscal accounts.
+- [Clearing Corporation of India Limited](https://www.ccilindia.com): Daily banking system net liquidity deficit or surplus calculations and market operations.
+- [US Federal Reserve Board](https://www.federalreserve.gov): FOMC policy rate corridor and monetary balance sheet reporting.

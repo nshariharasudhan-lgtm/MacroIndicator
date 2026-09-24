@@ -1,17 +1,20 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import { Header } from './components/Header.tsx';
 import { PublicDashboard } from './components/PublicDashboard.tsx';
-import { AdminDashboard } from './components/AdminDashboard.tsx';
-import { AdminLogin } from './components/AdminLogin.tsx';
-import { AdminPasswordChangeModal } from './components/AdminPasswordChangeModal.tsx';
-import { MacroCalendarView } from './components/MacroCalendarView.tsx';
-import { RepoRateCalculator } from './components/RepoRateCalculator.tsx';
-import { MetricEditorModal } from './components/MetricEditorModal.tsx';
 import { MacroMetric, isGlobalIndicator } from './types.ts';
 import { updatePageSEO } from './utils/seo.ts';
 import { parseMetricsCSV } from './utils/csvParser.ts';
 import { DEFAULT_MACRO_METRICS } from './data/defaultMetrics.ts';
 import { MacroNestLogo } from './components/MacroNestLogo.tsx';
+import { BackToTop } from './components/BackToTop.tsx';
+
+// Code-split heavy interactive subviews to eliminate unused JS on initial dashboard load
+const AdminDashboard = lazy(() => import('./components/AdminDashboard.tsx').then(m => ({ default: m.AdminDashboard })));
+const AdminLogin = lazy(() => import('./components/AdminLogin.tsx').then(m => ({ default: m.AdminLogin })));
+const AdminPasswordChangeModal = lazy(() => import('./components/AdminPasswordChangeModal.tsx').then(m => ({ default: m.AdminPasswordChangeModal })));
+const MacroCalendarView = lazy(() => import('./components/MacroCalendarView.tsx').then(m => ({ default: m.MacroCalendarView })));
+const RepoRateCalculator = lazy(() => import('./components/RepoRateCalculator.tsx').then(m => ({ default: m.RepoRateCalculator })));
+const MetricEditorModal = lazy(() => import('./components/MetricEditorModal.tsx').then(m => ({ default: m.MetricEditorModal })));
 
 export default function App() {
   // Initialize with cached client data if available, otherwise default verified indicators
@@ -549,66 +552,79 @@ export default function App() {
         {loading && metrics.length === 0 ? (
           <div className="py-24 text-center">
             <div className="w-8 h-8 mx-auto border-2 border-slate-300 dark:border-slate-700 border-t-slate-900 dark:border-t-white rounded-full animate-spin mb-4" />
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-slate-600 dark:text-slate-300">
               Loading macroeconomic indicators from CSV...
             </p>
           </div>
-        ) : currentView === 'admin' ? (
-          !isAdminAuthenticated ? (
-            <AdminLogin
-              onLoginSuccess={handleLoginSuccess}
-              onCancel={() => handleViewChange('dashboard')}
-            />
-          ) : (
-            <AdminDashboard
-              metrics={metrics}
-              onAddNew={() => {
-                setEditingMetric(null);
-                setIsEditorOpen(true);
-              }}
-              onEdit={(metric) => {
-                setEditingMetric(metric);
-                setIsEditorOpen(true);
-              }}
-              onDelete={handleDeleteMetric}
-              onTogglePublish={handleTogglePublish}
-              onMoveMetric={handleMoveMetric}
-              onPopulateSampleSpec={handlePopulateSampleSpec}
-              onResetOfficialSpec={handleResetOfficialSpec}
-              onClearAll={handleClearAll}
-              onOpenCalendar={() => handleViewChange('calendar')}
-              loading={loading}
-              onRefreshMetrics={fetchMetrics}
-              onBatchUpdateMetrics={handleBatchUpdateMetrics}
-              onOpenPasswordChange={() => setIsPasswordChangeModalOpen(true)}
-              onLogout={handleLogout}
-            />
-          )
-        ) : currentView === 'calendar' ? (
-          <MacroCalendarView />
-        ) : currentView === 'calculator' ? (
-          <RepoRateCalculator
-            metrics={metrics}
-            onNavigateHome={() => handleViewChange('dashboard')}
-          />
         ) : (
-          <PublicDashboard
-            metrics={metrics}
-            activeTab={currentView === 'global' ? 'global' : 'domestic'}
-            onTabChange={(tab) => handleViewChange(tab === 'global' ? 'global' : 'dashboard')}
-            onOpenCalculator={() => handleViewChange('calculator')}
-          />
+          <Suspense
+            fallback={
+              <div className="py-20 text-center">
+                <div className="w-8 h-8 mx-auto border-2 border-slate-300 dark:border-slate-700 border-t-slate-900 dark:border-t-white rounded-full animate-spin mb-4" />
+                <p className="text-xs text-slate-600 dark:text-slate-300">
+                  Loading view...
+                </p>
+              </div>
+            }
+          >
+            {currentView === 'admin' ? (
+              !isAdminAuthenticated ? (
+                <AdminLogin
+                  onLoginSuccess={handleLoginSuccess}
+                  onCancel={() => handleViewChange('dashboard')}
+                />
+              ) : (
+                <AdminDashboard
+                  metrics={metrics}
+                  onAddNew={() => {
+                    setEditingMetric(null);
+                    setIsEditorOpen(true);
+                  }}
+                  onEdit={(metric) => {
+                    setEditingMetric(metric);
+                    setIsEditorOpen(true);
+                  }}
+                  onDelete={handleDeleteMetric}
+                  onTogglePublish={handleTogglePublish}
+                  onMoveMetric={handleMoveMetric}
+                  onPopulateSampleSpec={handlePopulateSampleSpec}
+                  onResetOfficialSpec={handleResetOfficialSpec}
+                  onClearAll={handleClearAll}
+                  onOpenCalendar={() => handleViewChange('calendar')}
+                  loading={loading}
+                  onRefreshMetrics={fetchMetrics}
+                  onBatchUpdateMetrics={handleBatchUpdateMetrics}
+                  onOpenPasswordChange={() => setIsPasswordChangeModalOpen(true)}
+                  onLogout={handleLogout}
+                />
+              )
+            ) : currentView === 'calendar' ? (
+              <MacroCalendarView />
+            ) : currentView === 'calculator' ? (
+              <RepoRateCalculator
+                metrics={metrics}
+                onNavigateHome={() => handleViewChange('dashboard')}
+              />
+            ) : (
+              <PublicDashboard
+                metrics={metrics}
+                activeTab={currentView === 'global' ? 'global' : 'domestic'}
+                onTabChange={(tab) => handleViewChange(tab === 'global' ? 'global' : 'dashboard')}
+                onOpenCalculator={() => handleViewChange('calculator')}
+              />
+            )}
+          </Suspense>
         )}
       </main>
 
       {/* Footer */}
       {currentView !== 'admin' && (
-        <footer id="app-footer" className="border-t border-slate-200 dark:border-slate-800/80 bg-slate-50/70 dark:bg-slate-900/40 text-xs text-slate-500 dark:text-slate-400 py-6 mt-16 transition-colors">
+        <footer id="app-footer" className="border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 text-xs text-slate-700 dark:text-slate-300 py-6 mt-16 transition-colors">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex flex-col sm:flex-row items-center gap-3">
               <MacroNestLogo className="h-8 w-auto" />
-              <span className="text-slate-300 dark:text-slate-700 hidden sm:inline">•</span>
-              <span className="text-center sm:text-left">Primary Data Feeds: RBI, MoSPI, Ministry of Finance, CCIL</span>
+              <span className="text-slate-400 dark:text-slate-600 hidden sm:inline">•</span>
+              <span className="text-center sm:text-left text-slate-700 dark:text-slate-300 font-medium">Primary Data Feeds: RBI, MoSPI, Ministry of Finance, CCIL</span>
             </div>
 
             <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs">
@@ -619,50 +635,50 @@ export default function App() {
               >
                 EMI Calculator
               </button>
-              <span className="text-slate-300 dark:text-slate-700">•</span>
+              <span className="text-slate-400 dark:text-slate-600">•</span>
               <button
                 onClick={() => handleViewChange('calendar')}
-                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
+                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-semibold text-slate-700 dark:text-slate-300 cursor-pointer"
                 title="India Macro Data Release Calendar"
               >
                 Calendar
               </button>
-              <span className="text-slate-300 dark:text-slate-700">•</span>
+              <span className="text-slate-400 dark:text-slate-600">•</span>
               <a
                 href="/data/metrics.csv"
                 target="_blank"
                 download="metrics.csv"
-                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-semibold text-slate-700 dark:text-slate-300"
                 title="Download raw metrics CSV"
               >
                 Data Feed (CSV)
               </a>
-              <span className="text-slate-300 dark:text-slate-700">•</span>
+              <span className="text-slate-400 dark:text-slate-600">•</span>
               <a
                 href="/sitemap.xml"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-semibold text-slate-700 dark:text-slate-300"
                 title="Google XML Sitemap"
               >
                 Sitemap (XML)
               </a>
-              <span className="text-slate-300 dark:text-slate-700">•</span>
+              <span className="text-slate-400 dark:text-slate-600">•</span>
               <a
                 href="/robots.txt"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-semibold text-slate-700 dark:text-slate-300"
                 title="Search Engine & AI Crawler Directives"
               >
                 Robots.txt
               </a>
-              <span className="text-slate-300 dark:text-slate-700">•</span>
+              <span className="text-slate-400 dark:text-slate-600">•</span>
               <a
                 href="/llms.txt"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium text-slate-600 dark:text-slate-300"
+                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-bold text-slate-800 dark:text-slate-200"
                 title="AI Search & LLM Context File (llms.txt standard)"
               >
                 AI Search Spec (llms.txt)
@@ -673,27 +689,38 @@ export default function App() {
       )}
 
       {/* Content Management Editor Modal for Metrics */}
-      <MetricEditorModal
-        isOpen={isEditorOpen}
-        initialData={editingMetric}
-        onClose={() => {
-          setIsEditorOpen(false);
-          setEditingMetric(null);
-        }}
-        onSave={handleSaveMetric}
-      />
+      {isEditorOpen && (
+        <Suspense fallback={null}>
+          <MetricEditorModal
+            isOpen={isEditorOpen}
+            initialData={editingMetric}
+            onClose={() => {
+              setIsEditorOpen(false);
+              setEditingMetric(null);
+            }}
+            onSave={handleSaveMetric}
+          />
+        </Suspense>
+      )}
 
       {/* Admin Password Change / First Login Modal */}
-      <AdminPasswordChangeModal
-        isOpen={isPasswordChangeModalOpen || (isAdminAuthenticated && mustChangePassword)}
-        isFirstLogin={mustChangePassword}
-        token={adminToken || ''}
-        onClose={() => setIsPasswordChangeModalOpen(false)}
-        onSuccess={() => {
-          setMustChangePassword(false);
-          setIsPasswordChangeModalOpen(false);
-        }}
-      />
+      {(isPasswordChangeModalOpen || (isAdminAuthenticated && mustChangePassword)) && (
+        <Suspense fallback={null}>
+          <AdminPasswordChangeModal
+            isOpen={isPasswordChangeModalOpen || (isAdminAuthenticated && mustChangePassword)}
+            isFirstLogin={mustChangePassword}
+            token={adminToken || ''}
+            onClose={() => setIsPasswordChangeModalOpen(false)}
+            onSuccess={() => {
+              setMustChangePassword(false);
+              setIsPasswordChangeModalOpen(false);
+            }}
+          />
+        </Suspense>
+      )}
+
+      {/* Floating Back to Top Button */}
+      <BackToTop showThreshold={300} />
     </div>
   );
 }

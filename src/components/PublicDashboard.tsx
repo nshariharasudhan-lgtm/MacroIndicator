@@ -103,7 +103,7 @@ export const PublicDashboard: FC<PublicDashboardProps> = ({
             className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
               currentTab === 'domestic'
                 ? 'bg-white text-slate-950 dark:bg-slate-800 dark:text-white shadow-xs border border-slate-200/60 dark:border-slate-700'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-slate-800/60'
+                : 'text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-slate-800/60'
             }`}
           >
             <span className="text-base">🇮🇳</span>
@@ -112,7 +112,7 @@ export const PublicDashboard: FC<PublicDashboardProps> = ({
               className={`px-1.5 py-0.5 rounded-md text-[11px] font-mono ${
                 currentTab === 'domestic'
                   ? 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300'
-                  : 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+                  : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
               }`}
             >
               {publishedDomestic.length}
@@ -130,7 +130,7 @@ export const PublicDashboard: FC<PublicDashboardProps> = ({
             className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
               currentTab === 'global'
                 ? 'bg-white text-slate-950 dark:bg-slate-800 dark:text-white shadow-xs border border-slate-200/60 dark:border-slate-700'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-slate-800/60'
+                : 'text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-slate-800/60'
             }`}
           >
             <Globe className="w-4 h-4 text-sky-500" />
@@ -139,7 +139,7 @@ export const PublicDashboard: FC<PublicDashboardProps> = ({
               className={`px-1.5 py-0.5 rounded-md text-[11px] font-mono ${
                 currentTab === 'global'
                   ? 'bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300'
-                  : 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+                  : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
               }`}
             >
               {publishedGlobal.length}
@@ -148,7 +148,7 @@ export const PublicDashboard: FC<PublicDashboardProps> = ({
         </div>
 
         {/* Live Status indicator */}
-        <div className="hidden sm:flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 pr-2">
+        <div className="hidden sm:flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300 pr-2">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -166,7 +166,7 @@ export const PublicDashboard: FC<PublicDashboardProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2 mb-0.5">
-                <span className="text-[11px] font-bold text-sky-600 dark:text-sky-400 uppercase tracking-wider">
+                <span className="text-[11px] font-bold text-sky-700 dark:text-sky-300 uppercase tracking-wider">
                   International Macroeconomic Benchmarks
                 </span>
                 <span className="text-[10px] bg-sky-200 dark:bg-sky-900/80 text-sky-900 dark:text-sky-200 font-extrabold px-1.5 py-0.5 rounded-full">
@@ -176,7 +176,7 @@ export const PublicDashboard: FC<PublicDashboardProps> = ({
               <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
                 Global Policy Rates, Commodity Benchmarks &amp; External Drivers
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
                 Track US Federal Reserve policy, US CPI inflation, nonfarm payrolls, 10Y US Treasury yields, US Dollar Index (DXY), Brent crude, gold, ECB rate decisions, and China PMI directly impacting India’s trade deficit, rupee exchange rate, and capital flows.
               </p>
             </div>
@@ -193,7 +193,7 @@ export const PublicDashboard: FC<PublicDashboardProps> = ({
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer shrink-0 ${
               selectedCadence === 'ALL'
                 ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs'
-                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             All {currentTab === 'global' ? 'Global' : 'Domestic'} ({activePool.length})
@@ -204,7 +204,7 @@ export const PublicDashboard: FC<PublicDashboardProps> = ({
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer shrink-0 ${
               selectedCadence === 'DAILY'
                 ? 'bg-blue-600 text-white shadow-xs'
-                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             Daily
@@ -217,7 +217,7 @@ export const PublicDashboard: FC<PublicDashboardProps> = ({
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer shrink-0 ${
                   selectedCadence === 'WEEKLY'
                     ? 'bg-purple-600 text-white shadow-xs'
-                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`}
               >
                 Weekly
@@ -228,7 +228,7 @@ export const PublicDashboard: FC<PublicDashboardProps> = ({
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer shrink-0 ${
                   selectedCadence === 'FORTNIGHTLY'
                     ? 'bg-fuchsia-600 text-white shadow-xs'
-                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`}
               >
                 Fortnightly
@@ -241,7 +241,7 @@ export const PublicDashboard: FC<PublicDashboardProps> = ({
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer shrink-0 ${
               selectedCadence === 'MONTHLY'
                 ? 'bg-amber-600 text-white shadow-xs'
-                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             Monthly
@@ -252,7 +252,7 @@ export const PublicDashboard: FC<PublicDashboardProps> = ({
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer shrink-0 ${
               selectedCadence === (currentTab === 'global' ? 'MEETINGS' : 'QUARTERLY')
                 ? 'bg-indigo-600 text-white shadow-xs'
-                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             {currentTab === 'global' ? 'Central Bank (FOMC/ECB)' : 'Quarterly / MPC'}
@@ -285,7 +285,7 @@ export const PublicDashboard: FC<PublicDashboardProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2 mb-0.5">
-                <span className="text-[11px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
+                <span className="text-[11px] font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider">
                   Interactive Simulator
                 </span>
                 <span className="text-[10px] bg-amber-400 text-slate-950 font-black px-1.5 py-0.5 rounded-full">
@@ -295,7 +295,7 @@ export const PublicDashboard: FC<PublicDashboardProps> = ({
               <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
                 RBI Repo Rate Impact on Home Loan EMI &amp; Bank Fixed Deposits
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
                 Simulate how RBI MPC rate cuts or hikes pass through to floating loans (EBLR) and term deposits.
               </p>
             </div>
@@ -312,7 +312,7 @@ export const PublicDashboard: FC<PublicDashboardProps> = ({
 
       {/* Indicators Grid */}
       {filteredMetrics.length === 0 ? (
-        <div className="p-12 text-center rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs text-slate-500">
+        <div className="p-12 text-center rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs text-slate-600 dark:text-slate-300">
           No {currentTab === 'global' ? 'global' : 'domestic'} indicators match your search or filter.
         </div>
       ) : (

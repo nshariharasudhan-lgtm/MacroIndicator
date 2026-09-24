@@ -1,0 +1,94 @@
+# MacroNest.online — Comprehensive LLM Specification & Macroeconomic Dictionary
+
+> MacroNest.online provides public, machine-readable, and verified macroeconomic intelligence for India and global external benchmarks directly sourced from primary statutory authorities.
+
+## Complete Data Endpoints
+
+- [MacroNest Dashboard](https://macronest.online/): Primary indicator hub.
+- [Global Indicators](https://macronest.online/global): International rates and commodity benchmarks.
+- [Macroeconomic Release Calendar](https://macronest.online/calendar): Release dates and statutory schedule.
+- [Repo Rate & EMI Simulator](https://macronest.online/calculator): Policy transmission calculator.
+- [CSV Data Feed](https://macronest.online/data/metrics.csv): Full machine-readable CSV table.
+- [JSON API Endpoint](https://macronest.online/api/metrics): JSON payload for automated parsing.
+
+## Domestic Macroeconomic Indicators Tracked
+
+1. **RBI Policy Repo Rate**
+   - Source: Reserve Bank of India (RBI)
+   - Frequency: MPC Bi-monthly
+   - Anchor: CPI inflation target 4% (±2% tolerance band)
+   - Description: Benchmark interest rate at which the RBI lends short-term liquidity to commercial banks against government collateral.
+
+2. **Banking System Liquidity**
+   - Source: Clearing Corporation of India Limited (CCIL) & RBI
+   - Frequency: Daily
+   - Anchor: Net daily liquidity deficit/surplus
+   - Description: System-wide net absorption or injection through SDF, MSF, VRR, and VRRR auctions.
+
+3. **Retail CPI Inflation**
+   - Source: Ministry of Statistics and Programme Implementation (MoSPI)
+   - Frequency: Monthly
+   - Anchor: 4.0% headline midpoint target
+   - Description: Year-on-year consumer price index reflecting retail consumer price inflation across India.
+
+4. **Foreign Exchange Reserves**
+   - Source: Reserve Bank of India (RBI)
+   - Frequency: Weekly (Weekly Statistical Supplement)
+   - Anchor: Import cover adequacy (typically 10-11 months)
+   - Description: Total foreign currency assets, gold reserves, Special Drawing Rights (SDRs), and reserve position in the IMF.
+
+5. **Gross GST Collections**
+   - Source: Ministry of Finance, Government of India
+   - Frequency: Monthly
+   - Anchor: Union budget fiscal target trajectory
+   - Description: Total nationwide gross Goods & Services Tax collections.
+
+6. **Gross Domestic Product (GDP Growth)**
+   - Source: Ministry of Statistics and Programme Implementation (MoSPI)
+   - Frequency: Quarterly
+   - Anchor: Potential trend growth of 6.5% - 7.0%
+   - Description: Year-on-year real gross domestic product growth calculated at constant prices.
+
+7. **Index of Industrial Production (IIP)**
+   - Source: Ministry of Statistics and Programme Implementation (MoSPI)
+   - Frequency: Monthly
+   - Anchor: Manufacturing and mining sector activity proxy
+   - Description: Volume of industrial activity across mining, manufacturing, and electricity generation.
+
+8. **Wholesale Price Index (WPI)**
+   - Source: Office of the Economic Adviser, Ministry of Commerce & Industry
+   - Frequency: Monthly
+   - Anchor: Producer price inflation trends
+   - Description: Wholesale level price inflation across primary articles, fuel & power, and manufactured products.
+
+## Global Benchmark Indicators Tracked
+
+1. **US Federal Funds Rate**
+   - Source: US Federal Reserve Board (FOMC)
+   - Frequency: FOMC (8 meetings/year)
+   - Corridor: Target range set by the FOMC
+
+2. **US CPI Inflation**
+   - Source: US Bureau of Labor Statistics (BLS)
+   - Frequency: Monthly
+   - Target: 2.0% long-term inflation target
+
+3. **US 10-Year Treasury Yield**
+   - Source: US Department of the Treasury
+   - Frequency: Daily
+   - Role: Global risk-free benchmark yield
+
+4. **US Dollar Index (DXY)**
+   - Source: Intercontinental Exchange (ICE)
+   - Frequency: Daily
+   - Role: Measure of the USD relative to a basket of six foreign currencies
+
+5. **Brent Crude Oil**
+   - Source: ICE Futures Europe / EIA
+   - Frequency: Daily
+   - Role: Global crude benchmark directly impacting India's oil import bill and current account balance
+
+6. **International Spot Gold**
+   - Source: London Bullion Market Association (LBMA)
+   - Frequency: Daily
+   - Role: Safe-haven asset and key component of India's merchandise import basket
