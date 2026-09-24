@@ -6,7 +6,10 @@ import { defineConfig } from 'vite';
 
 const currentDir = import.meta.dirname ?? path.dirname(fileURLToPath(import.meta.url));
 
-export default defineConfig(() => {
+export default defineConfig(({ command }) => {
+  if (command === 'build') {
+    process.env.NODE_ENV = 'production';
+  }
   return {
     plugins: [react(), tailwindcss()],
     resolve: {
