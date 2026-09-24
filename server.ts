@@ -7,6 +7,8 @@ import dotenv from 'dotenv';
 import { createServer as createViteServer } from 'vite';
 import { MacroMetric } from './src/types.ts';
 import { parseMetricsCSV, exportMetricsToCSV } from './src/utils/csvParser.ts';
+import sitemapHandler from './api/sitemap.ts';
+import insightSsrHandler from './api/insight-ssr.ts';
 
 dotenv.config();
 
@@ -266,14 +268,16 @@ app.get('/robots.txt', (_req, res) => {
   res.status(404).send('robots.txt not found');
 });
 
-app.get('/sitemap.xml', (_req, res) => {
-  res.setHeader('Content-Type', 'application/xml; charset=utf-8');
-  res.setHeader('Cache-Control', 'public, max-age=3600');
-  const pubPath = path.join(process.cwd(), 'public', 'sitemap.xml');
-  const distPath = path.join(process.cwd(), 'dist', 'sitemap.xml');
-  if (fs.existsSync(pubPath)) return res.sendFile(pubPath);
-  if (fs.existsSync(distPath)) return res.sendFile(distPath);
-  res.status(404).send('sitemap.xml not found');
+app.get('/sitemap.xml', async (req, res) => {
+  try {
+    return await sitemapHandler(req, res);
+  } catch {
+    const pubPath = path.join(process.cwd(), 'public', 'sitemap.xml');
+    const distPath = path.join(process.cwd(), 'dist', 'sitemap.xml');
+    if (fs.existsSync(distPath)) return res.sendFile(distPath);
+    if (fs.existsSync(pubPath)) return res.sendFile(pubPath);
+    res.status(404).send('sitemap.xml not found');
+  }
 });
 
 app.get('/llms.txt', (_req, res) => {
@@ -780,6 +784,68 @@ app.all('/api/*', (_req, res) => {
 // ================= VITE MIDDLEWARE & STATIC SERVING ================= //
 
 async function startServer() {
+  const distPath = path.join(process.cwd(), 'dist');
+
+  // Individual Insight Article handler (Static prerendered file or on-demand SSR)
+  app.get(['/insights/:slug', '/insights/:slug/'], async (req, res, next) => {
+    const slug = req.params.slug?.replace(/\/+$/, '');
+    // Don't intercept static assets
+    if (!slug || slug.includes('.') || slug === 'index' || slug === 'index.html') {
+      return next();
+    }
+
+    const staticFile = path.join(distPath, 'insights', slug, 'index.html');
+    if (fs.existsSync(staticFile)) {
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      return res.sendFile(staticFile);
+    }
+
+    try {
+      return await insightSsrHandler(req, res);
+    } catch (err) {
+      console.error('SSR error for insight slug:', slug, err);
+      const fallbackFile = path.join(distPath, 'insights', 'index.html');
+      if (fs.existsSync(fallbackFile)) return res.sendFile(fallbackFile);
+      return res.sendFile(path.join(process.cwd(), 'insights', 'index.html'));
+    }
+  });
+
+  // Serve static assets from dist
+  if (fs.existsSync(distPath)) {
+    app.use(express.static(distPath, { redirect: false }));
+  }
+
+  // Section Routes
+  app.get(['/insights', '/insights/'], (_req, res) => {
+    const file = path.join(distPath, 'insights', 'index.html');
+    if (fs.existsSync(file)) return res.sendFile(file);
+    return res.sendFile(path.join(process.cwd(), 'insights', 'index.html'));
+  });
+
+  app.get(['/global', '/global/*', '/global/index.html'], (_req, res) => {
+    const file = path.join(distPath, 'global', 'index.html');
+    if (fs.existsSync(file)) return res.sendFile(file);
+    return res.sendFile(path.join(process.cwd(), 'global', 'index.html'));
+  });
+
+  app.get(['/calendar', '/calendar/*', '/calendar/index.html'], (_req, res) => {
+    const file = path.join(distPath, 'calendar', 'index.html');
+    if (fs.existsSync(file)) return res.sendFile(file);
+    return res.sendFile(path.join(process.cwd(), 'calendar', 'index.html'));
+  });
+
+  app.get(['/calculator', '/calculator/*', '/calculator/index.html'], (_req, res) => {
+    const file = path.join(distPath, 'calculator', 'index.html');
+    if (fs.existsSync(file)) return res.sendFile(file);
+    return res.sendFile(path.join(process.cwd(), 'calculator', 'index.html'));
+  });
+
+  app.get(['/admin', '/admin/*', '/admin/index.html'], (_req, res) => {
+    const file = path.join(distPath, 'admin', 'index.html');
+    if (fs.existsSync(file)) return res.sendFile(file);
+    return res.sendFile(path.join(process.cwd(), 'admin', 'index.html'));
+  });
+
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
       server: { middlewareMode: true },
@@ -787,23 +853,6 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(process.cwd(), 'dist');
-    app.use(express.static(distPath));
-    app.get(['/global', '/global/*'], (_req, res) => {
-      res.sendFile(path.join(distPath, 'global/index.html'));
-    });
-    app.get(['/calendar', '/calendar/*'], (_req, res) => {
-      res.sendFile(path.join(distPath, 'calendar/index.html'));
-    });
-    app.get(['/calculator', '/calculator/*'], (_req, res) => {
-      res.sendFile(path.join(distPath, 'calculator/index.html'));
-    });
-    app.get(['/insights', '/insights/*'], (_req, res) => {
-      res.sendFile(path.join(distPath, 'insights/index.html'));
-    });
-    app.get(['/admin', '/admin/*'], (_req, res) => {
-      res.sendFile(path.join(distPath, 'admin/index.html'));
-    });
     app.get('*', (_req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });

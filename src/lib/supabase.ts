@@ -176,10 +176,25 @@ const LOCAL_STORAGE_KEY = 'macronest_insights_posts_v1';
 
 // Read environment variables
 export function getSupabaseCredentials() {
+  const getEnv = (key: string): string => {
+    try {
+      if (typeof process !== 'undefined' && process.env && process.env[key]) {
+        return process.env[key] as string;
+      }
+    } catch {}
+    try {
+      // @ts-ignore
+      if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env[key]) {
+        // @ts-ignore
+        return import.meta.env[key] as string;
+      }
+    } catch {}
+    return '';
+  };
+
   let url = (
-    (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_URL) ||
-    process.env?.VITE_SUPABASE_URL ||
-    process.env?.SUPABASE_URL ||
+    getEnv('VITE_SUPABASE_URL') ||
+    getEnv('SUPABASE_URL') ||
     ''
   ).trim();
 
@@ -187,9 +202,8 @@ export function getSupabaseCredentials() {
   url = url.replace(/\/rest\/v1\/?$/, '').replace(/\/+$/, '');
 
   const anonKey = (
-    (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_ANON_KEY) ||
-    process.env?.VITE_SUPABASE_ANON_KEY ||
-    process.env?.SUPABASE_ANON_KEY ||
+    getEnv('VITE_SUPABASE_ANON_KEY') ||
+    getEnv('SUPABASE_ANON_KEY') ||
     ''
   ).trim();
 

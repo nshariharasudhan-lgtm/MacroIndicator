@@ -2,6 +2,19 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.macronest.online"
+        }
+      ],
+      "destination": "https://macronest.online/:path*",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/data/metrics.csv",
@@ -87,6 +100,10 @@
   ],
   "rewrites": [
     {
+      "source": "/sitemap.xml",
+      "destination": "/api/sitemap"
+    },
+    {
       "source": "/calendar",
       "destination": "/calendar/index.html"
     },
@@ -107,8 +124,8 @@
       "destination": "/insights/index.html"
     },
     {
-      "source": "/insights/:path*",
-      "destination": "/insights/index.html"
+      "source": "/insights/:slug",
+      "destination": "/api/insight-ssr?slug=:slug"
     },
     {
       "source": "/global",
